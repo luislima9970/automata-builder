@@ -1,6 +1,7 @@
 {
   "name": "automata-builder",
   "version": "1.0.0",
+  "type": "module",
   "description": "automata builder project",
   "main": "index.js",
   "scripts": {
