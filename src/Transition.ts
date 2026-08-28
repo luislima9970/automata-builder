@@ -1,4 +1,5 @@
 export interface Transition {
-	to: number;
+	from: number;
 	symbol: string | null;
+	to: number;
 }
