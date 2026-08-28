@@ -2,15 +2,15 @@
 
 export class State {
 
-    private id: string;
+    private id: number;
     private isAccepting: boolean;
 
-    constructor(id: string,isAccepting : boolean = false){
+    constructor(id: number,isAccepting : boolean = false){
         this.id = id;
         this.isAccepting = isAccepting;
     }
 
-    setName(name : string) : void {
+    setId(name : number) : void {
         this.id = name;
     }
 
@@ -22,7 +22,7 @@ export class State {
         this.isAccepting = !this.isAccepting;
     }
 
-    getId() : string{
+    getId() : number{
         return this.id;
     }
 
