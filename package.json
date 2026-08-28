@@ -1,0 +1,26 @@
+{
+  "name": "automata-builder",
+  "version": "1.0.0",
+  "description": "automata builder project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luislima9970/automata-builder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luislima9970/automata-builder/issues"
+  },
+  "homepage": "https://github.com/luislima9970/automata-builder#readme",
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}
