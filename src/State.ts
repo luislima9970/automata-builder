@@ -10,11 +10,8 @@ export class State {
         this.isAccepting = isAccepting;
     }
 
-    setId(name : number) : void {
-        this.id = name;
-    }
 
-    changeAcceptance(isAccepting : boolean) : void {
+    setAcceptance(isAccepting : boolean) : void {
         this.isAccepting = isAccepting;
     }
 

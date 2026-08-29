@@ -9,9 +9,10 @@ export class Automata {
     protected states : State[];
 
     protected names : Map <number,string>;
-
+    protected startStateId = 0;
     protected usedNames = new Set<string>();
     private nextStateId = 1;
+    private nextTransitionId = 1;
     
     constructor(name : string | null = "s"){
         this.transitions = [];
@@ -28,9 +29,9 @@ export class Automata {
 
     }
 
-    addState(name : string) : boolean {
+    addState(name : string) : State | null {
 
-        if (this.usedNames.has(name)) return false;
+        if (this.usedNames.has(name)) return null;
     
         const id : number = this.nextStateId++;
 
@@ -42,22 +43,50 @@ export class Automata {
 
         this.states.push(s);
 
-        return true;
+        return s;
 
 
     }
 
-    addTransition(transition : Transition) : void {
+    addTransition(transition : Transition) : Transition | null {
+        const fromExists = this.states.some((state) => state.getId() === transition.from);
+        const toExists = this.states.some((state) => state.getId() === transition.to);
+
+        if (!fromExists || !toExists) return null;
+
+        if (transition.id === undefined || transition.id === null || transition.id < 0) {
+            transition.id = this.nextTransitionId++;
+        }
+
+        while (this.transitions.some((existingTransition) => existingTransition.id === transition.id)) {
+            transition.id = this.nextTransitionId++;
+        }
+
         this.transitions.push(transition);
+        return transition;
     }
 
-    removeTransition(transition : Transition) : boolean {
-        const transitionIndex = this.transitions.indexOf(transition);
+    removeTransition(transitionOrId : Transition | number) : boolean {
+        const transitionIndex = typeof transitionOrId === "number"
+            ? this.transitions.findIndex((transition) => transition.id === transitionOrId)
+            : this.transitions.indexOf(transitionOrId);
 
         if (transitionIndex === -1) return false;
 
         this.transitions.splice(transitionIndex, 1);
         return true;
+    }
+
+    getStates() : State[] {
+        return [...this.states];
+    }
+
+    getTransitions() : Transition[] {
+        return [...this.transitions];
+    }
+
+    getName(id : number) : string | undefined {
+        return this.names.get(id);
     }
 
     removeState(id : number) : boolean {
@@ -75,6 +104,12 @@ export class Automata {
         this.names.delete(id);
 
         return true;
+    }
+
+    setStartState(id : number) : void {
+        const exists = this.states.some((state) => state.getId() === id);
+        if (!exists) return;
+        this.startStateId = id;
     }
 
     private removeAllTransitionsFromState(id : number) : void {
