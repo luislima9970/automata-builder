@@ -1,5 +1,5 @@
 import { State } from "./State.js"
-import type { Transition } from "./Transition.js"
+import type { Transition } from "./Transitions/Transition.js"
 
 
 export class Automata {

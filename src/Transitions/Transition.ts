@@ -3,3 +3,5 @@ export interface Transition {
 	symbol: string | null;
 	to: number;
 }
+
+
