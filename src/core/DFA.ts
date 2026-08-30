@@ -2,8 +2,9 @@ import { Automata } from "./Automata.js"
 import { State } from "./State.js"
 import type { Transition } from "./Transition.js"
 import type { DFARunResult } from "./DFARunResult.js"
+import type { Acceptor } from "./Acceptor.js"
 
-export class DFA extends Automata {
+export class DFA extends Automata implements Acceptor {
 
     private indexes : Map<number, Map<string | null, Transition>> | null = null;
 
@@ -95,7 +96,7 @@ export class DFA extends Automata {
         };
     }
 
-    accept(input: string) : boolean {
+    accepts(input: string) : boolean {
         const result = this.run(input);
 
         if (!result.completed || result.finalStateId === null) return false;

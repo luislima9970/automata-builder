@@ -56,7 +56,7 @@ describe("DFA", () => {
     const t1 = { from: 0, symbol: "a", to: q1!.getId() };
     expect(dfa.addTransition(t1)).toEqual(t1);
 
-    expect(dfa.accept("a")).toBe(true);
-    expect(dfa.accept("b")).toBe(false);
+    expect(dfa.accepts("a")).toBe(true);
+    expect(dfa.accepts("b")).toBe(false);
   });
 });
