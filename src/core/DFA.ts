@@ -94,4 +94,13 @@ export class DFA extends Automata {
             completed : true
         };
     }
+
+    accept(input: string) : boolean {
+        const result = this.run(input);
+
+        if (!result.completed || result.finalStateId === null) return false;
+
+        const finalState = this.states.find((state) => state.getId() === result.finalStateId);
+        return finalState !== undefined && finalState.getAcceptance();
+    }
 }

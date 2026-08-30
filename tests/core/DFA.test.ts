@@ -39,8 +39,24 @@ describe("DFA", () => {
 
     const path = dfa.run("ab");
 
-    expect(path).toHaveLength(2);
-    expect(path[0]).toMatchObject(t1);
-    expect(path[1]).toMatchObject(t2);
+    expect(path.transitions).toHaveLength(2);
+    expect(path.transitions[0]).toMatchObject(t1);
+    expect(path.transitions[1]).toMatchObject(t2);
+    expect(path.finalStateId).toBe(0);
+    expect(path.completed).toBe(true);
+  });
+
+  it("accepts input only when the final state is accepting", () => {
+    const dfa = new DFA("start");
+
+    const q1 = dfa.addState("q1");
+    expect(q1).not.toBeNull();
+    q1!.setAcceptance(true);
+
+    const t1 = { from: 0, symbol: "a", to: q1!.getId() };
+    expect(dfa.addTransition(t1)).toEqual(t1);
+
+    expect(dfa.accept("a")).toBe(true);
+    expect(dfa.accept("b")).toBe(false);
   });
 });
