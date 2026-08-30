@@ -12,6 +12,14 @@ export class DFA extends Automata implements Acceptor {
         super(name);
     }
 
+    override addState(name : string) : State | null {
+        const state = super.addState(name);
+
+        if (state !== null) this.indexes = null;
+
+        return state;
+    }
+
     override addTransition(transition : Transition) : Transition | null {
 
         const alreadyExists = this.transitions.some(
@@ -20,7 +28,32 @@ export class DFA extends Automata implements Acceptor {
 
         if (alreadyExists) return null;
 
-        return super.addTransition(transition);
+        const result = super.addTransition(transition);
+
+        if (result !== null) this.indexes = null;
+
+        return result;
+    }
+
+    override removeTransition(transitionOrId : Transition | number) : boolean {
+        const removed = super.removeTransition(transitionOrId);
+
+        if (removed) this.indexes = null;
+
+        return removed;
+    }
+
+    override removeState(id : number) : boolean {
+        const removed = super.removeState(id);
+
+        if (removed) this.indexes = null;
+
+        return removed;
+    }
+
+    override setStartState(id : number) : void {
+        super.setStartState(id);
+        this.indexes = null;
     }
 
     getTransitionFor(currentId : number,symbol : string) : Transition | null {

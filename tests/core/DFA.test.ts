@@ -59,4 +59,26 @@ describe("DFA", () => {
     expect(dfa.accepts("a")).toBe(true);
     expect(dfa.accepts("b")).toBe(false);
   });
+
+  it("rebuilds the transition index after adding states and new transitions", () => {
+    const dfa = new DFA("start");
+
+    const q1 = dfa.addState("q1");
+    expect(q1).not.toBeNull();
+
+    const first = { from: 0, symbol: "a", to: q1!.getId() };
+    expect(dfa.addTransition(first)).toEqual(first);
+    expect(dfa.run("a").completed).toBe(true);
+
+    const q2 = dfa.addState("q2");
+    expect(q2).not.toBeNull();
+
+    const second = { from: 0, symbol: "b", to: q2!.getId() };
+    expect(dfa.addTransition(second)).toEqual(second);
+
+    const result = dfa.run("b");
+
+    expect(result.completed).toBe(true);
+    expect(result.finalStateId).toBe(q2!.getId());
+  });
 });
