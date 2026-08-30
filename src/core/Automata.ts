@@ -1,5 +1,5 @@
 import { State } from "./State.js"
-import type { Transition } from "./Transitions/Transition.js"
+import type { Transition } from "./Transition.js"
 
 
 export class Automata {
@@ -111,6 +111,11 @@ export class Automata {
         if (!exists) return;
         this.startStateId = id;
     }
+
+    getStartStateId() : number {
+        return this.startStateId;
+    }
+
 
     private removeAllTransitionsFromState(id : number) : void {
         this.transitions = this.transitions.filter(
