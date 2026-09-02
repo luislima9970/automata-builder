@@ -1,6 +1,6 @@
 # Automata Builder
 
-A TypeScript library for modeling and working with formal automata in a structured, extensible way. The project is currently focused on the API layer: defining the domain model, core abstractions, and automata behavior before any interface or visual builder is introduced.
+A TypeScript library for modeling and working with formal automata in a structured, extensible way. The project is currently focused on the API layer: defining the automata model and building a regex interpreter and parser that can compile expressions into NFAs.
 
 ## Overview
 
@@ -10,13 +10,27 @@ Automata Builder is intended as a reusable automata toolkit for:
 - modeling deterministic and nondeterministic automata
 - managing start and accepting states
 - validating input against automata logic
-- supporting future extensions such as regex-derived automata and higher-level parsing workflows
+- tokenizing and parsing regular expressions
+- compiling parsed regular expressions into NFAs
+- supporting a future NFA-to-DFA conversion
 
-This repository is designed as a library-first project. The UML below defines the architectural foundation for the implementation and remains the reference model for the API.
+This repository is designed as a library-first project. The diagrams below document the planned architecture and the stages of the regex compilation pipeline. They are reference models for the implementation, not a claim that every component is already available.
 
-## UML Model
+## Architecture Diagrams
 
-![Automata UML model](diagrams/image.png)
+### Regex pipeline
+
+![Regex parsing and NFA construction](diagrams/01_regex_pipeline_classes.svg)
+
+![Regex compilation flow](diagrams/05_regex_compilation_flow.svg)
+
+### Syntax tree and automata model
+
+![Token and syntax tree model](diagrams/02_token_and_syntax_node.svg)
+
+![Automata class hierarchy](diagrams/03_automata_hierarchy.svg)
+
+![NFA fragment relationship](diagrams/04_nfa_fragment_relationship.svg)
 
 ## Architectural Model
 
@@ -59,37 +73,38 @@ The project is organized around a small set of core abstractions designed to rem
   - Defines the interface for accepting or rejecting input according to automata rules
 
 - RegexParser
-  - Converts textual patterns into tokens and fragments for automata construction
+  - Will convert tokens into a syntax tree for automata construction
 
-## Planned API Structure
+- SyntaxNode
+  - Represents the recursive structure of a parsed regular expression
 
-The intended public API is organized around the following responsibilities:
+- NFAFragment
+  - Represents a composable start and end pair during NFA construction
 
-1. State creation and configuration
-   - create states
-   - mark or unmark accepting states
-   - retrieve state metadata
+## Development Direction
 
-2. Transition management
-   - add transitions between states
-   - validate source and destination references
-   - support symbol-based navigation and generalized transition behavior
+The intended workflow is organized around the following stages:
 
-3. Automata lifecycle
-   - define the initial state
-   - add and remove states
-   - add and remove transitions
-   - inspect automata state and transition collections
+1. Regex interpretation
+  - tokenize literals, operators, delimiters, and epsilon
+  - parse tokens into a syntax tree
+  - optionally optimize the syntax tree
 
-4. Validation and execution
-   - evaluate input against automata behavior
-   - determine acceptance or rejection
-   - support DFA- and NFA-specific execution rules
+2. NFA construction
+  - build fragments for literals, concatenation, union, and repetition
+  - connect fragments with symbol and epsilon transitions
+  - produce an executable NFA
 
-5. Composition and parsing extensions
-   - tokenize input patterns
-   - build automata fragments from tokens
-   - combine fragments into more advanced recognizers
+3. Automata behavior
+  - create and configure states and transitions
+  - run DFA and NFA inputs
+  - determine acceptance and inspect execution paths
+
+4. Potential conversion features
+  - convert an NFA into an equivalent DFA
+  - preserve acceptance behavior during conversion
+
+The regex interpreter and parser-to-NFA path are the main completion milestone for the current project direction. The library should not be considered complete until that work is implemented and tested.
 
 ## Design Principles
 
@@ -122,11 +137,13 @@ This is an implementation detail of the execution layer, so it is intentionally 
 
 ## Project Scope
 
-This repository currently focuses on the API and domain model. The UI is not part of the immediate scope and will be considered only after the automata core is defined and stable.
+This repository currently focuses on the API, automata domain model, and regex compilation pipeline. UI development has not started yet and remains outside the current implementation scope.
 
 ## Status
 
-- Documentation: complete
-- UML-driven architecture: defined
-- API foundation: in progress
-- UI development: not planned yet
+- Documentation and architecture diagrams: in progress
+- Automata API foundation: in progress
+- Regex tokenizer: implemented
+- Regex interpreter and parser into NFA: in progress
+- NFA-to-DFA conversion: potential future feature
+- UI development: not started
