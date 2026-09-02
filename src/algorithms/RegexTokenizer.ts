@@ -1,7 +1,7 @@
 import type { Token } from "./Token.js";
 
 export class RegexTokenizer {
-    tokenize(input: string): Token[] {
+    static tokenize(input: string): Token[] {
         const tokens: Token[] = [];
         let position = 0;
 

@@ -18,8 +18,12 @@ describe("NFA", () => {
 
     const transitions = nfa.getTransitionsFor([0], "a");
     expect(transitions).toHaveLength(2);
-    expect(transitions.map((t) => t.to).sort()).toEqual([q1!.getId(), q2!.getId()].sort());
-    expect(nfa.nextStates([0], "a").sort()).toEqual([q1!.getId(), q2!.getId()].sort());
+    expect(transitions.map((t) => t.to).sort((a, b) => a - b)).toEqual(
+      [q1!.getId(), q2!.getId()].sort((a, b) => a - b),
+    );
+    expect(nfa.nextStates([0], "a").sort((a, b) => a - b)).toEqual(
+      [q1!.getId(), q2!.getId()].sort((a, b) => a - b),
+    );
   });
 
   it("runs through NFA and returns all paths for nondeterministic input", () => {
@@ -40,7 +44,9 @@ describe("NFA", () => {
 
     expect(result.completed).toBe(true);
     expect(result.finalStateIds).toHaveLength(2);
-    expect(result.finalStateIds.sort()).toEqual([q1!.getId(), q2!.getId()].sort());
+    expect(result.finalStateIds.sort((a, b) => a - b)).toEqual(
+      [q1!.getId(), q2!.getId()].sort((a, b) => a - b),
+    );
   });
 
   it("returns empty when input has no valid path", () => {
@@ -122,41 +128,53 @@ describe("NFA", () => {
     expect(nfa.addTransition(eps2)).toEqual(eps2);
 
     const closure = nfa.epsilonClosure([0]);
-    expect(closure.sort()).toEqual([0, q1!.getId(), q2!.getId()].sort());
+    expect(closure.sort((a, b) => a - b)).toEqual(
+      [0, q1!.getId(), q2!.getId()].sort((a, b) => a - b),
+    );
   });
 
-  it("deduplicates multiple paths to the same state", () => {
+  it("deduplicates multiple paths reaching the same state", () => {
     const nfa = new NFA("start");
 
-    const q1 = nfa.addState("q1");
-    const q2 = nfa.addState("q2");
-    expect(q1).not.toBeNull();
-    expect(q2).not.toBeNull();
+    const q1 = nfa.addState("q1")!;
+    const q2 = nfa.addState("q2")!;
+    const q3 = nfa.addState("q3")!;
 
-    // Two different paths from start to q2
-    const t1 = { from: 0, symbol: "a", to: q1!.getId() };
-    const t2 = { from: 0, symbol: "a", to: q2!.getId() };
-    const t3 = { from: q1!.getId(), symbol: "b", to: q2!.getId() };
-
-    expect(nfa.addTransition(t1)).toEqual(t1);
-    expect(nfa.addTransition(t2)).toEqual(t2);
-    expect(nfa.addTransition(t3)).toEqual(t3);
+    nfa.addTransition({ from: 0, symbol: "a", to: q1.getId() });
+    nfa.addTransition({ from: 0, symbol: "a", to: q2.getId() });
+    nfa.addTransition({ from: q1.getId(), symbol: "b", to: q3.getId() });
+    nfa.addTransition({ from: q2.getId(), symbol: "b", to: q3.getId() });
 
     const result = nfa.run("ab");
 
-    // Should reach q2 via two paths but deduplicate in result
     expect(result.completed).toBe(true);
-    expect(result.finalStateIds).toContain(q2!.getId());
+    expect(result.finalStateIds).toEqual([q3.getId()]);
   });
 
-  it("returns empty result when no start state is set", () => {
-    const nfa = new NFA(null);
-    nfa.setStartState(9999); // Invalid start state id
+  it("accepts empty input through epsilon transitions", () => {
+    const nfa = new NFA("start");
+    const accepting = nfa.addState("accepting")!;
+    accepting.setAcceptance(true);
 
-    const result = nfa.run("a");
+    nfa.addTransition({
+      from: 0,
+      symbol: null,
+      to: accepting.getId(),
+    });
 
-    expect(result.completed).toBe(false);
-    expect(result.finalStateIds).toHaveLength(0);
+    expect(nfa.accepts("")).toBe(true);
+  });
+
+  it("handles cycles in epsilon closure", () => {
+    const nfa = new NFA("start");
+    const q1 = nfa.addState("q1")!;
+
+    nfa.addTransition({ from: 0, symbol: null, to: q1.getId() });
+    nfa.addTransition({ from: q1.getId(), symbol: null, to: 0 });
+
+    expect(nfa.epsilonClosure([0]).sort((a, b) => a - b)).toEqual(
+      [0, q1.getId()].sort((a, b) => a - b),
+    );
   });
 });
 

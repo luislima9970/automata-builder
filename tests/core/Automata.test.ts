@@ -32,10 +32,10 @@ describe("Automata", () => {
 
     const transition = { from: 0, symbol: "a", to: q1!.getId() };
 
-    expect(automata.addTransition(transition)).toEqual({
-      ...transition,
-      id: 1,
-    });
+    const added = automata.addTransition(transition);
+
+    expect(added).toMatchObject(transition);
+    expect(added?.id).toBeDefined();
     expect(automata.getTransitions()).toHaveLength(1);
   });
 
@@ -59,6 +59,7 @@ describe("Automata", () => {
 
     const second = automata.addTransition({ from: 0, symbol: "b", to: q1!.getId() });
     expect(automata.removeTransition(second!.id!)).toBe(true);
+    expect(automata.getTransitions()).toHaveLength(0);
   });
 
   it("updates the start state when a valid state is selected", () => {

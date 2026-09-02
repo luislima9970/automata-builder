@@ -15,6 +15,8 @@ export class DFA extends Automata implements Acceptor {
 
     override addTransition(transition : Transition) : Transition | null {
 
+        if (transition.symbol === null) return null;
+
         const alreadyExists = this.transitions.some(
             (t) => transition.from === t.from && transition.symbol === t.symbol
         );
