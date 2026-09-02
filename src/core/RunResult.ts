@@ -5,3 +5,9 @@ export interface DFARunResult {
     finalStateId: number | null;
     completed: boolean;
 }
+
+export interface NFARunResult {
+    transitions: Transition[][];
+    finalStateIds: number[];
+    completed: boolean;
+}
