@@ -39,17 +39,15 @@ export class NFA extends Automata implements Acceptor {
 
         if (this.indexes === null) this.buildIndexes();
 
-        const closure : Set<number> = new Set(stateIds);
-
+        const closure : Set<number> = new Set();
         const stack : number[] = [...stateIds];
 
-
         while (stack.length > 0){
-
-            const state : number | undefined = stack.at(-1);
-            stack.pop();
+            const state : number | undefined = stack.pop();
             if (state === undefined) continue;
             if (closure.has(state)) continue;
+
+            closure.add(state);
 
             const m : Map<string | null, Transition[]> | undefined = this.indexes?.get(state)
 
@@ -59,12 +57,9 @@ export class NFA extends Automata implements Acceptor {
 
             for (const next of nextStates){
                 if (closure.has(next) === false){
-                    closure.add(next);
                     stack.push(next);
                 }
             }
-
-
         }
 
         return [...closure];
@@ -114,8 +109,70 @@ export class NFA extends Automata implements Acceptor {
     }
 
     run(input: string) : NFARunResult {
-        
+        const start = this.getStartStateId();
+        if (start === null) {
+            return { transitions: [], finalStateIds: [], completed: false };
+        }
+
+        const startClosure = this.epsilonClosure([start]);
+        let currentStates = startClosure.map((stateId) => ({
+            stateId,
+            path: [] as Transition[]
+        }));
+
+        for (const symbol of input) {
+            const nextStates: Array<{ stateId: number; path: Transition[] }> = [];
+
+            for (const current of currentStates) {
+                const transitions = this.getTransitionsFor([current.stateId], symbol);
+
+                for (const transition of transitions) {
+                    const closure = this.epsilonClosure([transition.to]);
+
+                    for (const stateId of closure) {
+                        nextStates.push({
+                            stateId,
+                            path: [...current.path, transition]
+                        });
+                    }
+                }
+            }
+
+            if (nextStates.length === 0) {
+                return {
+                    transitions: currentStates.map((s) => s.path),
+                    finalStateIds: [],
+                    completed: false
+                };
+            }
+
+            const seen = new Set<number>();
+            const dedupedNextStates: Array<{ stateId: number; path: Transition[] }> = [];
+            for (const s of nextStates) {
+                if (!seen.has(s.stateId)) {
+                    seen.add(s.stateId);
+                    dedupedNextStates.push(s);
+                }
+            }
+            currentStates = dedupedNextStates;
+        }
+
+        return {
+            transitions: currentStates.map((s) => s.path),
+            finalStateIds: currentStates.map((s) => s.stateId),
+            completed: true
+        };
     }
 
+    accepts(input: string): boolean {
+        const result = this.run(input);
+
+        if (!result.completed) return false;
+
+        return result.finalStateIds.some((id) => {
+            const state = this.states.find((candidate) => candidate.getId() === id);
+            return state !== undefined && state.getAcceptance();
+        });
+    }
 
 }
