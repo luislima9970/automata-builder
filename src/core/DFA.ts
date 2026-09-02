@@ -12,13 +12,6 @@ export class DFA extends Automata implements Acceptor {
         super(name);
     }
 
-    override addState(name : string) : State | null {
-        const state = super.addState(name);
-
-        if (state !== null) this.indexes = null;
-
-        return state;
-    }
 
     override addTransition(transition : Transition) : Transition | null {
 
@@ -51,19 +44,15 @@ export class DFA extends Automata implements Acceptor {
         return removed;
     }
 
-    override setStartState(id : number) : void {
-        super.setStartState(id);
-        this.indexes = null;
-    }
 
     getTransitionFor(currentId : number,symbol : string) : Transition | null {
 
-        const transition = this.transitions.find(t => t.from === currentId && t.symbol === symbol);
+        if (this.indexes === null) this.buildIndexes();
 
-        if (transition === undefined) return null;
+        const symbolTransitions = this.indexes?.get(currentId);
+        const transition = symbolTransitions?.get(symbol) ?? null;
 
         return transition;
-
 
     }
 

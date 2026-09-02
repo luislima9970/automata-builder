@@ -108,15 +108,13 @@ The DFA keeps a cached transition index for fast lookup during `run()` and `acce
 - inner key: input symbol
 - value: the matching transition
 
-This cache is a performance shortcut, not the source of truth. It must be invalidated whenever the automaton changes because the transition table can become stale.
+This cache is a performance shortcut, not the source of truth. It must be invalidated whenever the transition graph changes because the lookup table can become stale.
 
-That means the cache should be cleared after any mutation that affects DFA behavior, including:
+That means the cache should be cleared after any mutation that changes the DFA transitions, especially:
 
 - adding a transition
 - removing a transition
-- adding a state
-- removing a state
-- changing the start state
+- removing a state that is connected to those transitions
 
 The reason is simple: the cached index is derived from the current DFA structure, and a stale cache would allow `run()` to use outdated transitions even though the automaton itself has changed.
 

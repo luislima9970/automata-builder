@@ -60,7 +60,20 @@ describe("DFA", () => {
     expect(dfa.accepts("b")).toBe(false);
   });
 
-  it("rebuilds the transition index after adding states and new transitions", () => {
+  it("uses the transition index for direct lookup and next-state navigation", () => {
+    const dfa = new DFA("start");
+
+    const q1 = dfa.addState("q1");
+    expect(q1).not.toBeNull();
+
+    const transition = { from: 0, symbol: "a", to: q1!.getId() };
+    expect(dfa.addTransition(transition)).toEqual(transition);
+
+    expect(dfa.getTransitionFor(0, "a")).toMatchObject(transition);
+    expect(dfa.nextState(0, "a")?.getId()).toBe(q1!.getId());
+  });
+
+  it("rebuilds the transition index after adding new transitions", () => {
     const dfa = new DFA("start");
 
     const q1 = dfa.addState("q1");
