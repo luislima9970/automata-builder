@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="440" viewBox="0 0 1100 440">
+  <title>NFA Fragment Relationship</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#58717D"/>
+    </marker>
+    <marker id="triangle" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 1 1 L 11 6 L 1 11 z" fill="#F8FBFC" stroke="#58717D" stroke-width="1.2"/>
+    </marker>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #17313D; }
+      .title { font-size: 22px; font-weight: 700; }
+      .class-title { font-size: 15px; font-weight: 700; }
+      .stereo { font-size: 11px; font-style: italic; fill: #58717D; }
+      .member { font-size: 12px; }
+      .label { font-size: 11px; fill: #58717D; }
+      .edge { fill: none; stroke: #58717D; stroke-width: 1.5; }
+      .dependency { fill: none; stroke: #58717D; stroke-width: 1.5; stroke-dasharray: 7 5; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#F8FBFC"/>
+  <text x="30" y="36" class="title">NFA Fragment Relationship</text>
+<rect x="60" y="110" width="270" height="136" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M65,110 H325 Q330,110 330,115 V164 H60 V115 Q60,110 65,110" fill="#73C5E8"/>
+<line x1="60" y1="164" x2="330" y2="164" stroke="#17313D"/>
+<line x1="60" y1="192" x2="330" y2="192" stroke="#17313D"/>
+<text x="195.0" y="127" text-anchor="middle" class="stereo">&lt;&lt;utility&gt;&gt;</text>
+<text x="195.0" y="149" text-anchor="middle" class="class-title">NFABuilder</text>
+<text x="70" y="213" class="member">+ build(root: SyntaxNode): NFA</text>
+<text x="70" y="233" class="member">- buildFragment(node, nfa): NFAFragment</text>
+<rect x="420" y="110" width="260" height="136" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M425,110 H675 Q680,110 680,115 V164 H420 V115 Q420,110 425,110" fill="#73C5E8"/>
+<line x1="420" y1="164" x2="680" y2="164" stroke="#17313D"/>
+<line x1="420" y1="218" x2="680" y2="218" stroke="#17313D"/>
+<text x="550.0" y="127" text-anchor="middle" class="stereo">&lt;&lt;interface&gt;&gt;</text>
+<text x="550.0" y="149" text-anchor="middle" class="class-title">NFAFragment</text>
+<text x="430" y="185" class="member">+ startId: number</text>
+<text x="430" y="205" class="member">+ endId: number</text>
+<rect x="770" y="90" width="270" height="148" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M775,90 H1035 Q1040,90 1040,95 V130 H770 V95 Q770,90 775,90" fill="#73C5E8"/>
+<line x1="770" y1="130" x2="1040" y2="130" stroke="#17313D"/>
+<line x1="770" y1="184" x2="1040" y2="184" stroke="#17313D"/>
+<text x="905.0" y="115" text-anchor="middle" class="class-title">NFA</text>
+<text x="780" y="151" class="member"># states: State[]</text>
+<text x="780" y="171" class="member"># transitions: Transition[]</text>
+<text x="780" y="205" class="member">+ addState(...): State</text>
+<text x="780" y="225" class="member">+ addTransition(...): Transition?</text>
+<path d="M 330,178.0 L 420,178.0" class="dependency" marker-end="url(#arrow)"/>
+<rect x="416" y="164.0" width="49" height="18" fill="#F8FBFC"/>
+<text x="420" y="178.0" class="label">creates</text>
+<path d="M 680,178.0 L 770,164.0" class="dependency" marker-end="url(#arrow)"/>
+<rect x="766" y="150.0" width="140" height="18" fill="#F8FBFC"/>
+<text x="770" y="164.0" class="label">identifies states in</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <title>Token and Recursive Syntax-Tree Model</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#58717D"/>
+    </marker>
+    <marker id="triangle" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 1 1 L 11 6 L 1 11 z" fill="#F8FBFC" stroke="#58717D" stroke-width="1.2"/>
+    </marker>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #17313D; }
+      .title { font-size: 22px; font-weight: 700; }
+      .class-title { font-size: 15px; font-weight: 700; }
+      .stereo { font-size: 11px; font-style: italic; fill: #58717D; }
+      .member { font-size: 12px; }
+      .label { font-size: 11px; fill: #58717D; }
+      .edge { fill: none; stroke: #58717D; stroke-width: 1.5; }
+      .dependency { fill: none; stroke: #58717D; stroke-width: 1.5; stroke-dasharray: 7 5; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#F8FBFC"/>
+  <text x="30" y="36" class="title">Token and Recursive Syntax-Tree Model</text>
+<rect x="70" y="110" width="300" height="156" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M75,110 H365 Q370,110 370,115 V164 H70 V115 Q70,110 75,110" fill="#73C5E8"/>
+<line x1="70" y1="164" x2="370" y2="164" stroke="#17313D"/>
+<line x1="70" y1="238" x2="370" y2="238" stroke="#17313D"/>
+<text x="220.0" y="127" text-anchor="middle" class="stereo">&lt;&lt;interface&gt;&gt;</text>
+<text x="220.0" y="149" text-anchor="middle" class="class-title">Token</text>
+<text x="80" y="185" class="member">+ type: TokenType</text>
+<text x="80" y="205" class="member">+ symbol: string?</text>
+<text x="80" y="225" class="member">+ position: number</text>
+<rect x="70" y="355" width="300" height="136" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M75,355 H365 Q370,355 370,360 V409 H70 V360 Q70,355 75,355" fill="#73C5E8"/>
+<line x1="70" y1="409" x2="370" y2="409" stroke="#17313D"/>
+<line x1="70" y1="463" x2="370" y2="463" stroke="#17313D"/>
+<text x="220.0" y="372" text-anchor="middle" class="stereo">&lt;&lt;enumeration&gt;&gt;</text>
+<text x="220.0" y="394" text-anchor="middle" class="class-title">TokenType</text>
+<text x="80" y="430" class="member">LITERAL, UNION, STAR, PLUS</text>
+<text x="80" y="450" class="member">QUESTION, LPAREN, RPAREN</text>
+<rect x="650" y="90" width="330" height="176" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M655,90 H975 Q980,90 980,95 V144 H650 V95 Q650,90 655,90" fill="#73C5E8"/>
+<line x1="650" y1="144" x2="980" y2="144" stroke="#17313D"/>
+<line x1="650" y1="238" x2="980" y2="238" stroke="#17313D"/>
+<text x="815.0" y="107" text-anchor="middle" class="stereo">&lt;&lt;interface&gt;&gt;</text>
+<text x="815.0" y="129" text-anchor="middle" class="class-title">SyntaxNode</text>
+<text x="660" y="165" class="member">+ type: SyntaxNodeType</text>
+<text x="660" y="185" class="member">+ symbol: string?</text>
+<text x="660" y="205" class="member">+ left: SyntaxNode?</text>
+<text x="660" y="225" class="member">+ right: SyntaxNode?</text>
+<rect x="650" y="355" width="330" height="136" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M655,355 H975 Q980,355 980,360 V409 H650 V360 Q650,355 655,355" fill="#73C5E8"/>
+<line x1="650" y1="409" x2="980" y2="409" stroke="#17313D"/>
+<line x1="650" y1="463" x2="980" y2="463" stroke="#17313D"/>
+<text x="815.0" y="372" text-anchor="middle" class="stereo">&lt;&lt;enumeration&gt;&gt;</text>
+<text x="815.0" y="394" text-anchor="middle" class="class-title">SyntaxNodeType</text>
+<text x="660" y="430" class="member">LITERAL, EPSILON, EMPTY</text>
+<text x="660" y="450" class="member">UNION, CONCAT, STAR, PLUS, QUESTION</text>
+<path d="M 220.0,266 L 220.0,355" class="edge" marker-end="url(#arrow)"/>
+<rect x="216.0" y="341" width="56" height="18" fill="#F8FBFC"/>
+<text x="220.0" y="355" class="label">typed by</text>
+<path d="M 815.0,266 L 815.0,355" class="edge" marker-end="url(#arrow)"/>
+<rect x="811.0" y="341" width="56" height="18" fill="#F8FBFC"/>
+<text x="815.0" y="355" class="label">typed by</text>
+<path d="M 980,178.0 L 1080,178.0 L 1080,300 L 815,300 L 815,266" class="edge"/>
+<rect x="1076" y="286" width="105" height="18" fill="#F8FBFC"/>
+<text x="1080" y="300" class="label">left/right 0..1</text>
+</svg>

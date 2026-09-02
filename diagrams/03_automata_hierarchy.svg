@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1450" height="880" viewBox="0 0 1450 880">
+  <title>Automata Class Hierarchy</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#58717D"/>
+    </marker>
+    <marker id="triangle" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 1 1 L 11 6 L 1 11 z" fill="#F8FBFC" stroke="#58717D" stroke-width="1.2"/>
+    </marker>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #17313D; }
+      .title { font-size: 22px; font-weight: 700; }
+      .class-title { font-size: 15px; font-weight: 700; }
+      .stereo { font-size: 11px; font-style: italic; fill: #58717D; }
+      .member { font-size: 12px; }
+      .label { font-size: 11px; fill: #58717D; }
+      .edge { fill: none; stroke: #58717D; stroke-width: 1.5; }
+      .dependency { fill: none; stroke: #58717D; stroke-width: 1.5; stroke-dasharray: 7 5; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#F8FBFC"/>
+  <text x="30" y="36" class="title">Automata Class Hierarchy</text>
+<rect x="470" y="80" width="390" height="282" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M475,80 H855 Q860,80 860,85 V134 H470 V85 Q470,80 475,80" fill="#73C5E8"/>
+<line x1="470" y1="134" x2="860" y2="134" stroke="#17313D"/>
+<line x1="470" y1="228" x2="860" y2="228" stroke="#17313D"/>
+<text x="665.0" y="97" text-anchor="middle" class="stereo">&lt;&lt;abstract&gt;&gt;</text>
+<text x="665.0" y="119" text-anchor="middle" class="class-title">Automata</text>
+<text x="480" y="155" class="member"># states: State[]</text>
+<text x="480" y="175" class="member"># transitions: Transition[]</text>
+<text x="480" y="195" class="member"># names: Map&lt;number, string&gt;</text>
+<text x="480" y="215" class="member"># startStateId: number</text>
+<text x="480" y="249" class="member">+ addState(name: string): State</text>
+<text x="480" y="269" class="member">+ addTransition(t: Transition): Transition?</text>
+<text x="480" y="289" class="member">+ removeTransition(id: number): Transition?</text>
+<text x="480" y="309" class="member">+ getStates(): State[]</text>
+<text x="480" y="329" class="member">+ getTransitions(): Transition[]</text>
+<text x="480" y="349" class="member">+ removeState(id: number): boolean</text>
+<rect x="40" y="90" width="280" height="168" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M45,90 H315 Q320,90 320,95 V130 H40 V95 Q40,90 45,90" fill="#73C5E8"/>
+<line x1="40" y1="130" x2="320" y2="130" stroke="#17313D"/>
+<line x1="40" y1="184" x2="320" y2="184" stroke="#17313D"/>
+<text x="180.0" y="115" text-anchor="middle" class="class-title">State</text>
+<text x="50" y="151" class="member">- id: number</text>
+<text x="50" y="171" class="member">- isAccepting: boolean</text>
+<text x="50" y="205" class="member">+ getId(): number</text>
+<text x="50" y="225" class="member">+ getAcceptance(): boolean</text>
+<text x="50" y="245" class="member">+ setAcceptance(value: boolean): void</text>
+<rect x="1010" y="90" width="300" height="176" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M1015,90 H1305 Q1310,90 1310,95 V144 H1010 V95 Q1010,90 1015,90" fill="#73C5E8"/>
+<line x1="1010" y1="144" x2="1310" y2="144" stroke="#17313D"/>
+<line x1="1010" y1="238" x2="1310" y2="238" stroke="#17313D"/>
+<text x="1160.0" y="107" text-anchor="middle" class="stereo">&lt;&lt;interface&gt;&gt;</text>
+<text x="1160.0" y="129" text-anchor="middle" class="class-title">Transition</text>
+<text x="1020" y="165" class="member">+ id: number</text>
+<text x="1020" y="185" class="member">+ from: number</text>
+<text x="1020" y="205" class="member">+ symbol: string | null</text>
+<text x="1020" y="225" class="member">+ to: number</text>
+<rect x="180" y="540" width="410" height="188" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M185,540 H585 Q590,540 590,545 V580 H180 V545 Q180,540 185,540" fill="#73C5E8"/>
+<line x1="180" y1="580" x2="590" y2="580" stroke="#17313D"/>
+<line x1="180" y1="614" x2="590" y2="614" stroke="#17313D"/>
+<text x="385.0" y="565" text-anchor="middle" class="class-title">DFA</text>
+<text x="190" y="601" class="member">- indexes: Map&lt;number, Map&lt;string, Transition&gt;&gt;?</text>
+<text x="190" y="635" class="member">+ addTransition(t: Transition): Transition?</text>
+<text x="190" y="655" class="member">+ getTransitionFor(id, symbol): Transition?</text>
+<text x="190" y="675" class="member">+ nextState(id, symbol): State?</text>
+<text x="190" y="695" class="member">+ run(input: string): DFARunResult</text>
+<text x="190" y="715" class="member">+ accepts(input: string): boolean</text>
+<rect x="760" y="540" width="390" height="162" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M765,540 H1145 Q1150,540 1150,545 V580 H760 V545 Q760,540 765,540" fill="#73C5E8"/>
+<line x1="760" y1="580" x2="1150" y2="580" stroke="#17313D"/>
+<line x1="760" y1="608" x2="1150" y2="608" stroke="#17313D"/>
+<text x="955.0" y="565" text-anchor="middle" class="class-title">NFA</text>
+<text x="770" y="629" class="member">+ nextStates(ids, symbol): number[]</text>
+<text x="770" y="649" class="member">+ epsilonClosure(ids): number[]</text>
+<text x="770" y="669" class="member">+ run(input: string): NFARunResult</text>
+<text x="770" y="689" class="member">+ accepts(input: string): boolean</text>
+<rect x="1190" y="600" width="220" height="116" rx="5" fill="#FFFFFF" stroke="#17313D" stroke-width="1.4"/>
+<path d="M1195,600 H1405 Q1410,600 1410,605 V654 H1190 V605 Q1190,600 1195,600" fill="#73C5E8"/>
+<line x1="1190" y1="654" x2="1410" y2="654" stroke="#17313D"/>
+<line x1="1190" y1="682" x2="1410" y2="682" stroke="#17313D"/>
+<text x="1300.0" y="617" text-anchor="middle" class="stereo">&lt;&lt;interface&gt;&gt;</text>
+<text x="1300.0" y="639" text-anchor="middle" class="class-title">Acceptor</text>
+<text x="1200" y="703" class="member">+ accepts(input: string): boolean</text>
+<path d="M 320,174.0 L 400,174.0 L 400,221.0 L 470,221.0" class="edge"/>
+<rect x="396" y="207.0" width="56" height="18" fill="#F8FBFC"/>
+<text x="400" y="221.0" class="label">contains</text>
+<path d="M 1010,178.0 L 930,178.0 L 930,221.0 L 860,221.0" class="edge"/>
+<rect x="926" y="207.0" width="56" height="18" fill="#F8FBFC"/>
+<text x="930" y="221.0" class="label">contains</text>
+<path d="M 385.0,540 L 385.0,470 L 620,470 L 665.0,362" class="edge" marker-end="url(#triangle)"/>
+<path d="M 955.0,540 L 955.0,470 L 710,470 L 665.0,362" class="edge" marker-end="url(#triangle)"/>
+<path d="M 590,634.0 L 680,634.0 L 680,810 L 1190,810" class="dependency" marker-end="url(#arrow)"/>
+<rect x="676" y="796" width="70" height="18" fill="#F8FBFC"/>
+<text x="680" y="810" class="label">implements</text>
+<path d="M 1150,621.0 L 1190,658.0" class="dependency" marker-end="url(#arrow)"/>
+<rect x="1186" y="644.0" width="70" height="18" fill="#F8FBFC"/>
+<text x="1190" y="658.0" class="label">implements</text>
+</svg>
