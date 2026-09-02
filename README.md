@@ -98,6 +98,30 @@ The intended public API is organized around the following responsibilities:
 - Maintain a clear distinction between core automata logic and higher-level parsing or visualization features.
 - Use the UML as the architectural reference for the implementation, rather than introducing ad hoc structures.
 
+## DFA execution cache note
+
+The UML shows the conceptual DFA model, but it does not include the internal optimization used during execution.
+
+The DFA keeps a cached transition index for fast lookup during `run()` and `accepts()` calls:
+
+- outer key: current state id
+- inner key: input symbol
+- value: the matching transition
+
+This cache is a performance shortcut, not the source of truth. It must be invalidated whenever the automaton changes because the transition table can become stale.
+
+That means the cache should be cleared after any mutation that affects DFA behavior, including:
+
+- adding a transition
+- removing a transition
+- adding a state
+- removing a state
+- changing the start state
+
+The reason is simple: the cached index is derived from the current DFA structure, and a stale cache would allow `run()` to use outdated transitions even though the automaton itself has changed.
+
+This is an implementation detail of the execution layer, so it is intentionally not shown in the UML; it exists only to make repeated lookups faster while preserving the same formal DFA behavior.
+
 ## Project Scope
 
 This repository currently focuses on the API and domain model. The UI is not part of the immediate scope and will be considered only after the automata core is defined and stable.
