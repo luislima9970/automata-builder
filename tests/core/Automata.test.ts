@@ -20,6 +20,26 @@ describe("Automata", () => {
     expect(automata.getName(1)).toBe("q1");
   });
 
+  it("generates a unique name when adding a state without one", () => {
+    const automata = new Automata("start");
+
+    const first = automata.addState();
+    const second = automata.addState();
+
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(automata.getName(first!.getId())).toBe("q1");
+    expect(automata.getName(second!.getId())).toBe("q2");
+  });
+
+  it("sets and gets the automaton name", () => {
+    const automata = new Automata("start");
+
+    automata.setName("updated");
+
+    expect(automata.getAutomataName()).toBe("updated");
+  });
+
   it("rejects duplicate state names", () => {
     const automata = new Automata("start");
 

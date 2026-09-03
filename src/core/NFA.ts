@@ -1,5 +1,7 @@
 import { Automata } from "./Automata.js"
+import { State } from "./State.js"
 import type { Transition } from "./Transition.js"
+import type { DFARunResult } from "./RunResult.js"
 import type { Acceptor } from "./Acceptor.js"
 import type { NFARunResult } from "./RunResult.js"
 
