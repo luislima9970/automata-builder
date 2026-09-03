@@ -7,15 +7,14 @@ export class NFABuilder {
 
     build(root: SyntaxNode): NFA {
         const nfa = new NFA();
-        const temporaryStateId = nfa.getStartStateId();
 
         const fragment = this.buildFragment(root, nfa);
 
-        if (!nfa.removeState(temporaryStateId)) {
+        nfa.setStartState(fragment.startId);
+
+        if (!nfa.removeState(0)) {
             throw new Error("Failed to remove temporary start state");
         }
-
-        nfa.setStartState(fragment.startId);
 
         const finalState = nfa.getStates().find(state => state.getId() === fragment.endId);
 
