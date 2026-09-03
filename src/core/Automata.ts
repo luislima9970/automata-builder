@@ -98,6 +98,18 @@ export class Automata {
         return [...this.states];
     }
 
+    getState(id : number) : State | null {
+        return this.states.find((state) => state.getId() === id) ?? null;
+    }
+
+    setStateAcceptance(id : number) : boolean {
+        const state = this.getState(id);
+        if (state === null) return false;
+
+        state.setAcceptance(true);
+        return true;
+    }
+
     getTransitions() : Transition[] {
         return [...this.transitions];
     }

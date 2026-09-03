@@ -5,12 +5,27 @@ import type { Transition } from "../core/Transition.js";
 import type { State } from "../core/State.js";
 export class NFABuilder {
 
-    build(root: SyntaxNode) : NFA{
+    build(root: SyntaxNode): NFA {
+        const nfa = new NFA();
+        const temporaryStateId = nfa.getStartStateId();
 
-        const nfa: NFA = new NFA();
+        const fragment = this.buildFragment(root, nfa);
 
+        if (!nfa.removeState(temporaryStateId)) {
+            throw new Error("Failed to remove temporary start state");
+        }
 
+        nfa.setStartState(fragment.startId);
 
+        const finalState = nfa.getStates().find(state => state.getId() === fragment.endId);
+
+        if (finalState === undefined) {
+            throw new Error("Failed to find final state");
+        }
+
+        finalState.setAcceptance(true);
+
+        return nfa;
     }
 
     private buildFragment(node: SyntaxNode, nfa: NFA): NFAFragment {

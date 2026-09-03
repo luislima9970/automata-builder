@@ -40,6 +40,22 @@ describe("Automata", () => {
     expect(automata.getAutomataName()).toBe("updated");
   });
 
+  it("gets a state by id and marks it as accepting", () => {
+    const automata = new Automata("start");
+    const state = automata.addState("q1");
+
+    expect(automata.getState(state!.getId())).toBe(state);
+    expect(automata.setStateAcceptance(state!.getId())).toBe(true);
+    expect(state!.getAcceptance()).toBe(true);
+  });
+
+  it("returns null and false for an unknown state id", () => {
+    const automata = new Automata("start");
+
+    expect(automata.getState(999)).toBeNull();
+    expect(automata.setStateAcceptance(999)).toBe(false);
+  });
+
   it("rejects duplicate state names", () => {
     const automata = new Automata("start");
 
