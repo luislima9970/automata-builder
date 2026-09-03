@@ -120,4 +120,62 @@ export class NFABuilder {
 
     }
 
+    buildStar(a: NFAFragment,nfa: NFA): NFAFragment {
+        const start = nfa.addState();
+
+        if (start === null) {
+            throw new Error("Failed to create state");
+        }
+
+        const toEnd = nfa.addTransition({from: start.getId(),to: a.endId,symbol: null});
+
+        const toBeginning = nfa.addTransition({from: a.endId,to: start.getId(),symbol: null});
+
+        const toStart = nfa.addTransition({from: start.getId(),to: a.startId,symbol: null});
+
+        if (toEnd === null || toBeginning === null || toStart === null) {
+            throw new Error("Failed to create star transitions");
+        }
+
+        return {startId: start.getId(),endId: a.endId};
+    }
+
+    buildPlus(a: NFAFragment,nfa: NFA): NFAFragment {
+        const start = nfa.addState();
+
+        if (start === null) {
+            throw new Error("Failed to create state");
+        }
+
+
+        const toBeginning = nfa.addTransition({from: a.endId,to: start.getId(),symbol: null});
+
+        const toStart = nfa.addTransition({from: start.getId(),to: a.startId,symbol: null});
+
+        if (toBeginning === null || toStart === null) {
+            throw new Error("Failed to create plus transitions");
+        }
+
+        return {startId: start.getId(),endId: a.endId};
+    }
+
+    buildQuestion(a : NFAFragment, nfa: NFA) : NFAFragment {
+        const start = nfa.addState();
+
+        if (start === null) {
+            throw new Error("Failed to create state");
+        }
+
+        const toEnd = nfa.addTransition({from: start.getId(),to: a.endId,symbol: null});
+
+
+        const toStart = nfa.addTransition({from: start.getId(),to: a.startId,symbol: null});
+
+        if (toEnd === null || toStart === null) {
+            throw new Error("Failed to create question transitions");
+        }
+
+        return {startId: start.getId(),endId: a.endId};
+    }
+
 }
