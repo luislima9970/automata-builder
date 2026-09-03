@@ -73,13 +73,31 @@ The project is organized around a small set of core abstractions designed to rem
   - Defines the interface for accepting or rejecting input according to automata rules
 
 - RegexParser
-  - Will convert tokens into a syntax tree for automata construction
+  - Converts tokens into a syntax tree for automata construction
 
 - SyntaxNode
   - Represents the recursive structure of a parsed regular expression
 
 - NFAFragment
   - Represents a composable start and end pair during NFA construction
+
+## Regular Expression Language
+
+The implemented regex language supports:
+
+- literal characters, such as `a` and `0`
+- epsilon, written as `\e`
+- implicit concatenation, such as `ab`
+- union with `|`, such as `a|b`
+- Kleene star with `*`, such as `a*`
+- one-or-more repetition with `+`, such as `a+`
+- optional expressions with `?`, such as `a?`
+- grouping with parentheses, such as `(a|b)*`
+- escaping operators and delimiters with `\`, such as `\+` for a literal plus sign
+
+Repetition binds more tightly than concatenation, and concatenation binds more tightly than union. For example, `ab*|c` is interpreted as `(a(b*))|c`.
+
+The parser and NFA builder are connected through `NFABuilder.buildRegex(regex)`, which parses a regex and returns an executable NFA.
 
 ## Development Direction
 
@@ -104,7 +122,7 @@ The intended workflow is organized around the following stages:
   - convert an NFA into an equivalent DFA
   - preserve acceptance behavior during conversion
 
-The regex interpreter and parser-to-NFA path are the main completion milestone for the current project direction. The library should not be considered complete until that work is implemented and tested.
+The regex interpreter, parser, and parser-to-NFA path are implemented and tested. The only remaining core conversion feature is NFA-to-DFA conversion. After that conversion is complete, UI development can begin.
 
 ## Design Principles
 
@@ -144,6 +162,6 @@ This repository currently focuses on the API, automata domain model, and regex c
 - Documentation and architecture diagrams: in progress
 - Automata API foundation: in progress
 - Regex tokenizer: implemented
-- Regex interpreter and parser into NFA: in progress
-- NFA-to-DFA conversion: potential future feature
-- UI development: not started
+- Regex interpreter and parser into NFA: implemented
+- NFA-to-DFA conversion: remaining core feature
+- UI development: next phase after NFA-to-DFA conversion
