@@ -78,4 +78,12 @@ describe("Automata", () => {
 
     expect(automata.getStartStateId()).toBe(0);
   });
+
+  it("does not remove the current start state", () => {
+    const automata = new Automata("start");
+
+    expect(automata.removeState(0)).toBe(false);
+    expect(automata.getStates()).toHaveLength(1);
+    expect(automata.getStartStateId()).toBe(0);
+  });
 });

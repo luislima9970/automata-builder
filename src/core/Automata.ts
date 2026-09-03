@@ -90,6 +90,8 @@ export class Automata {
     }
 
     removeState(id : number) : boolean {
+        if (id === this.startStateId) return false;
+
         const stateIndex = this.states.findIndex((state) => state.getId() === id);
 
         if (stateIndex === -1) return false;
