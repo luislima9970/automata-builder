@@ -13,23 +13,75 @@ export class NFABuilder {
 
     }
 
-    private buildFragment(node : SyntaxNode,nfa : NFA) : NFAFragment {
+    private buildFragment(node: SyntaxNode, nfa: NFA): NFAFragment {
+        switch (node.type) {
+            case "literal": {
+                if (node.symbol === undefined) {
+                    throw new Error("Literal node has no symbol");
+                }
 
-        if (node.left !== undefined){
-            this.buildFragment(node.left,nfa)
+                return this.buildLiteral(node.symbol, nfa);
+            }
+
+            case "epsilon":
+                return this.buildEpsilon(nfa);
+
+            case "concat": {
+                if (node.left === undefined || node.right === undefined) {
+                    throw new Error("Concat node requires two children");
+                }
+
+                const left = this.buildFragment(node.left, nfa);
+                const right = this.buildFragment(node.right, nfa);
+
+                return this.buildConcat(left, right, nfa);
+            }
+
+            case "union": {
+                if (node.left === undefined || node.right === undefined) {
+                    throw new Error("Union node requires two children");
+                }
+
+                const left = this.buildFragment(node.left, nfa);
+                const right = this.buildFragment(node.right, nfa);
+
+                return this.buildUnion(left, right, nfa);
+            }
+
+            case "star": {
+                if (node.left === undefined) {
+                    throw new Error("Star node requires one child");
+                }
+
+                const child = this.buildFragment(node.left, nfa);
+                return this.buildStar(child, nfa);
+            }
+
+            case "plus": {
+                if (node.left === undefined) {
+                    throw new Error("Plus node requires one child");
+                }
+
+                const child = this.buildFragment(node.left, nfa);
+                return this.buildPlus(child, nfa);
+            }
+
+            case "question": {
+                if (node.left === undefined) {
+                    throw new Error("Question node requires one child");
+                }
+
+                const child = this.buildFragment(node.left, nfa);
+                return this.buildQuestion(child, nfa);
+            }
+
+            default:
+                throw new Error(`Unknown syntax node type: ${node.type}`);
+
         }
-        if (node.right !== undefined){
-            this.buildFragment(node.right,nfa);
-        }
-
-        switch(node.type){
-
-        }
-
-
     }
 
-    buildLiteral(symbol : string,nfa : NFA)  : NFAFragment {
+    private buildLiteral(symbol : string,nfa : NFA)  : NFAFragment {
 
         const state1 = nfa.addState();
         if (state1 === null) {
@@ -53,7 +105,7 @@ export class NFABuilder {
 
     }
 
-    buildEpsilon(nfa: NFA) : NFAFragment {
+    private buildEpsilon(nfa: NFA) : NFAFragment {
         const state1 = nfa.addState();
         const state2 = nfa.addState();
 
@@ -88,7 +140,7 @@ export class NFABuilder {
 
     }
 
-    buildUnion(a : NFAFragment, b: NFAFragment, nfa: NFA) : NFAFragment {
+    private buildUnion(a : NFAFragment, b: NFAFragment, nfa: NFA) : NFAFragment {
 
         const state1 : State | null = nfa.addState();
         const state2 : State | null = nfa.addState();
@@ -140,7 +192,7 @@ export class NFABuilder {
         return {startId: start.getId(),endId: a.endId};
     }
 
-    buildPlus(a: NFAFragment,nfa: NFA): NFAFragment {
+    private buildPlus(a: NFAFragment,nfa: NFA): NFAFragment {
         const start = nfa.addState();
 
         if (start === null) {
@@ -159,7 +211,7 @@ export class NFABuilder {
         return {startId: start.getId(),endId: a.endId};
     }
 
-    buildQuestion(a : NFAFragment, nfa: NFA) : NFAFragment {
+    private buildQuestion(a : NFAFragment, nfa: NFA) : NFAFragment {
         const start = nfa.addState();
 
         if (start === null) {
