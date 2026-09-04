@@ -1,13 +1,20 @@
 {
   "name": "automata-builder",
+  "private": true,
   "version": "1.0.0",
   "type": "module",
   "description": "automata builder project",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "npm run test:lib",
+    "test:lib": "npm --workspace automata-lib test",
+    "test:watch": "npm --workspace automata-lib run test:watch",
+    "build:lib": "npm --workspace automata-lib run build",
+    "build:app": "npm --workspace app run build",
+    "build": "npm run build:lib && npm run build:app",
+    "dev": "npm --workspace app run dev --"
   },
+  "workspaces": ["automata-lib", "app"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luislima9970/automata-builder.git"

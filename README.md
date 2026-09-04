@@ -155,7 +155,7 @@ This is an implementation detail of the execution layer, so it is intentionally 
 
 ## Project Scope
 
-This repository currently focuses on the API, automata domain model, and regex compilation pipeline. UI development has not started yet and remains outside the current implementation scope.
+The repository is organized as a small workspace: the reusable library lives in `automata-lib/`, and the React UI lives in `app/`. The UI is an early workbench for exercising the library; broader visualization and editing workflows remain future work.
 
 ## Status
 
@@ -164,4 +164,5 @@ This repository currently focuses on the API, automata domain model, and regex c
 - Regex tokenizer: implemented
 - Regex interpreter and parser into NFA: implemented
 - NFA-to-DFA conversion: remaining core feature
-- UI development: next phase after NFA-to-DFA conversion
+- React workbench: initial setup complete
+- Full UI visualization and editing: future work
