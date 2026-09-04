@@ -84,6 +84,8 @@ describe("NFABuilder", () => {
     expect(nfa.accepts("dc")).toBe(false);
   });
 
+
+
   it("builds epsilon in a nested expression with multiple operators", () => {
     const nfa = NFABuilder.buildRegex("(a\\e|bc?)+");
 
