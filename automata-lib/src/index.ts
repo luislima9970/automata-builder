@@ -8,6 +8,8 @@ export type { Transition } from "./core/Transition.js";
 export { RegexParser } from "./algorithms/RegexParser.js";
 export { RegexTokenizer } from "./algorithms/RegexTokenizer.js";
 export { NFABuilder } from "./algorithms/NFABuilder.js";
+export { AutomataSerializer } from "./serializers/AutomataSerializer.js";
+export type { SerializedAutomata, SerializedState, SerializedTransition } from "./serializers/SerializedAutomata.js";
 export type { NFAFragment } from "./algorithms/NFAFragment.js";
 export type { SyntaxNode } from "./algorithms/SyntaxNode.js";
 export type { SyntaxNodeType } from "./algorithms/SyntaxNodeType.js";
