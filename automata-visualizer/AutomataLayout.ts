@@ -1,4 +1,4 @@
-import type { Automata } from './../automata-lib/src/core/Automata.js';
+import type { Automata } from '../automata-lib/src/core/Automata.js';
 import type { Position } from './Position.js';
 
 
@@ -35,12 +35,7 @@ export class AutomataVisualizer {
         return true;
     }
 
-    removeState(stateId: number): boolean {
-        const removed = this.automata.removeState(stateId);
-
-        if (!removed) return false;
-
-        this.positions.delete(stateId);
-        return true;
+    removeState(stateId: number): void {
+        this.positions.delete(stateId)
     }
 }
