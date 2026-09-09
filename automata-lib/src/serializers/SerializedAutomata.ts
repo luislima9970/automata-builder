@@ -14,7 +14,6 @@ export interface SerializedTransition {
 export interface SerializedAutomata {
     version: 1;
     type: "NFA" | "DFA";
-    name: string;
     startStateId: number;
     states: SerializedState[];
     transitions: SerializedTransition[];

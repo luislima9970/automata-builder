@@ -32,12 +32,10 @@ describe("Automata", () => {
     expect(automata.getName(second!.getId())).toBe("q2");
   });
 
-  it("sets and gets the automaton name", () => {
+  it("keeps the initial state name from the constructor without a separate automaton name", () => {
     const automata = new Automata("start");
 
-    automata.setName("updated");
-
-    expect(automata.getAutomataName()).toBe("updated");
+    expect(automata.getName(0)).toBe("start");
   });
 
   it("gets a state by id and marks it as accepting", () => {

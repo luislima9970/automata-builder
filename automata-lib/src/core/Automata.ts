@@ -4,7 +4,6 @@ import type { Transition } from "./Transition.js"
 
 export class Automata {
 
-    private automataName: string;
     protected transitions : Transition[];
 
     protected states : State[];
@@ -17,7 +16,6 @@ export class Automata {
     private nextGeneratedName = 1;
     
     constructor(name : string | null = "s"){
-        this.automataName = name ?? "Automata";
         this.transitions = [];
         this.states = [];
         this.names = new Map();
@@ -55,14 +53,6 @@ export class Automata {
         return s;
 
 
-    }
-
-    setName(name: string) : void {
-        this.automataName = name;
-    }
-
-    getAutomataName() : string {
-        return this.automataName;
     }
 
     addTransition(transition : Transition) : Transition | null {

@@ -15,10 +15,6 @@ export function validateSerializedAutomata(value: unknown): asserts value is Ser
         throw new Error('Automaton type must be "NFA" or "DFA"');
     }
 
-    if (typeof data.name !== "string") {
-        throw new Error("Automaton name must be a string");
-    }
-
     if (!Number.isInteger(data.startStateId)) {
         throw new Error("Start-state ID must be an integer");
     }

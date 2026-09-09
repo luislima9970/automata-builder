@@ -41,7 +41,6 @@ export class AutomataSerializer {
         return {
             version: 1,
             type,
-            name: automata.getAutomataName(),
             startStateId: automata.getStartStateId(),
             states,
             transitions
@@ -76,8 +75,6 @@ export class AutomataSerializer {
         const automata: NFA | DFA = data.type === "NFA"
             ? new NFA(firstState.name)
             : new DFA(firstState.name);
-
-        automata.setName(data.name);
 
         const idMap = new Map<number, number>();
 
