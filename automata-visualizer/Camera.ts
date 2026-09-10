@@ -49,11 +49,11 @@ export class Camera {
         this.zoom = newZoom;
         this.topLeft.x = worldX - (screenX / this.pixelWidth) * newViewBoxWidth;
         this.topLeft.y = worldY - (screenY / this.pixelHeight) * newViewBoxHeight;
-  }
+    }
 
-  private static clamp(value: number, min: number, max: number): number {
-    return Math.max(min, Math.min(max, value));
-  }
+    private static clamp(value: number, min: number, max: number): number {
+        return Math.max(min, Math.min(max, value));
+    }
 
 
 }
