@@ -10,21 +10,87 @@ export class AutomataLayout {
 
     private readonly positions = new Map<number, Position>();
 
-
+    private readonly visualTransitions = new Map<string, VisualTransition>();
 
 
     constructor(automata: Automata) {
         this.automata = automata;
-        this.createInitialPositions();
+        this.sync();
     }
 
-    private createInitialPositions(): void {
-        for (const [index, state] of this.automata.getStates().entries()) {
-            this.positions.set(state.getId(), {
-                x: 150 + index * 180,
-                y: 200
+    sync() : void {
+
+        this.syncPositions();
+        this.syncVisualTransitions();
+
+    }
+
+    private syncPositions(): void {
+        const states = this.automata.getStates();
+        const validStateIds = new Set(states.map((state) => state.getId()));
+
+        for (const stateId of this.positions.keys()) {
+            if (!validStateIds.has(stateId)) {
+                this.positions.delete(stateId);
+            }
+        }
+
+        for (const [index, state] of states.entries()) {
+            if (!this.positions.has(state.getId())) {
+                this.positions.set(
+                    state.getId(),
+                    this.createPosition(index)
+                );
+            }
+        }
+    }
+
+    private createPosition(index: number): Position {
+        return {
+            x: 150 + index * 180,
+            y: 200
+        };
+    }
+
+    
+    private syncVisualTransitions(): void {
+        const nextVisualTransitions = new Map<string, VisualTransition>();
+
+        for (const transition of this.automata.getTransitions()) {
+            const key = this.edgeKey(transition.from, transition.to);
+            const group = nextVisualTransitions.get(key);
+
+            if (group !== undefined) {
+                group.transitions.push(transition);
+                continue;
+            }
+
+            const previousGroup = this.visualTransitions.get(key);
+
+            nextVisualTransitions.set(key, {
+                transitions: [transition],
+                curvature: previousGroup?.curvature ?? 0
             });
         }
+
+        this.visualTransitions.clear();
+
+        for (const [key, visualTransition] of nextVisualTransitions) {
+            this.visualTransitions.set(key, visualTransition);
+        }
+    }
+
+    private edgeKey(fromId: number, toId : number): string {
+        return `${fromId}:${toId}`;
+    }
+    setCurvature(fromId: number, toId: number, curvature: number): boolean {
+        const key = this.edgeKey(fromId, toId);
+        const visualTransition = this.visualTransitions.get(key);
+
+        if (visualTransition === undefined) return false;
+
+        visualTransition.curvature = curvature;
+        return true;
     }
 
     getAutomata(): Automata {
@@ -42,60 +108,31 @@ export class AutomataLayout {
         return true;
     }
 
-    removeState(stateId: number): void {
-        this.positions.delete(stateId)
-    }
 
-    getEdgeGeometries() : EdgeGeometry[]{
+    getEdgeGeometries(): EdgeGeometry[] {
+        const ans: EdgeGeometry[] = [];
 
-        const visualTransitions : VisualTransition[] = this.createVisualTransitions();
+        for (const visualTransition of this.visualTransitions.values()) {
+            const firstTransition: Transition = visualTransition.transitions[0];
 
-        const ans : EdgeGeometry[] = [];
+            const fromId: number = firstTransition.from;
+            const toId: number = firstTransition.to;
 
-        for (const vtransition of visualTransitions){
+            const labels: string[] = [];
 
-            const t0 : Transition  = vtransition.transitions[0];
+            for (const transition of visualTransition.transitions) {
+                labels.push(transition.symbol === null ? "ε" : transition.symbol);
+            }
 
-            const fromId : number = t0.from;
-            const toId : number = t0.to;
+            const label: string = [...new Set(labels)].join(", ");
 
-            const labels : string[] = [];
-
-            for (const t of vtransition.transitions) labels.push((t.symbol === null ? 'ε' : t.symbol));
-
-            const label : string = [...new Set(labels)].join(", ");
-
-            ans.push(this.createEdgeGeometry(fromId,toId,label));
-
+            ans.push(this.createEdgeGeometry(fromId, toId, label, visualTransition.curvature));
         }
 
         return ans;
-
-    } 
-
-    private createVisualTransitions(): VisualTransition[] {
-        const transitions = new Map<string, VisualTransition>();
-
-        for (const transition of this.automata.getTransitions()) {
-
-            const key = `${transition.from}:${transition.to}`;
-            const visualTransition = transitions.get(key);
-
-            if (visualTransition === undefined) {
-                transitions.set(key, {
-                    transitions: [transition]
-                });
-
-                continue;
-            }
-
-            visualTransition.transitions.push(transition);
-            
-        }
-
-        return [...transitions.values()];
     }
 
+    
     private createEdgeGeometry(fromId : number, toId : number,label : string, curvature : number = 0, stateRadius : number = 30) : EdgeGeometry {
 
         const from : Position | undefined = this.positions.get(fromId);

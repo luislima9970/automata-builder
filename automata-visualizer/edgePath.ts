@@ -12,6 +12,10 @@ export function edgePath(from: Position, to: Position, curvature: number = 0): s
   const dy = to.y - from.y;
   const length = Math.sqrt(dx * dx + dy * dy);
 
+  if (length === 0) {
+    return `M ${from.x} ${from.y}`;
+  }
+
   const normalX = -dy / length;
   const normalY = dx / length;
 

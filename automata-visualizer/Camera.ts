@@ -13,6 +13,11 @@ export class Camera {
 
     constructor(x = 0,y = 0,zoom = 1,pixelWidth = 800, pixelHeight = 600){
 
+        if (pixelWidth <= 0 || pixelHeight <= 0) {
+            throw new Error("Camera dimensions must be greater than zero");
+        }
+
+
         this.topLeft.x = x;
         this.topLeft.y = y;
         this.zoom = zoom;
@@ -22,6 +27,15 @@ export class Camera {
 
     }
 
+    resize(pixelWidth: number, pixelHeight: number): void {
+        if (pixelWidth <= 0 || pixelHeight <= 0) {
+            throw new Error("Camera dimensions must be greater than zero");
+        }
+
+        this.pixelWidth = pixelWidth;
+        this.pixelHeight = pixelHeight;
+    }
+
     get viewBoxString(): string {
         return `${this.topLeft.x} ${this.topLeft.y} ${this.pixelWidth / this.zoom} ${this.pixelHeight / this.zoom}`;
     }
@@ -29,8 +43,8 @@ export class Camera {
 
     pan(dx: number, dy : number) : void {
         
-        this.topLeft.x -= (dx / this.pixelWidth) * (this.pixelWidth / this.zoom);
-        this.topLeft.y -= (dy / this.pixelHeight) * (this.pixelHeight / this.zoom);
+        this.topLeft.x -= (dx / this.zoom);
+        this.topLeft.y -= (dy / this.zoom);
 
     }
 
