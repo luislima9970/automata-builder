@@ -1,5 +1,5 @@
-import type { Automata } from '../automata-lib/src/core/Automata.js';
-import type { Transition } from '../automata-lib/src/core/Transition.js';
+import type { Automata } from '../../automata-lib/src/core/Automata.js';
+import type { Transition } from '../../automata-lib/src/core/Transition.js';
 import type { Position } from './Position.js';
 import type { EdgeGeometry } from './EdgeGeometry.js';
 import type { VisualTransition } from './VisualTransition.js'

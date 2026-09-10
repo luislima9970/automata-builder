@@ -37,13 +37,18 @@ export function edgeLabelPosition(from: Position, to: Position, curvature: numbe
   const dy = to.y - from.y;
   const length = Math.sqrt(dx * dx + dy * dy);
 
+  if (length === 0) {
+    return { x: midX, y: midY };
+  }
+
   const normalX = -dy / length;
   const normalY = dx / length;
 
   const labelOffset = curvature + Math.sign(curvature) * 15;
+
   return {
     x: midX + normalX * labelOffset,
-    y: midY + normalY * labelOffset,
+    y: midY + normalY * labelOffset
   };
 }
 

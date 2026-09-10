@@ -6,7 +6,7 @@
   "description": "automata builder project",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:lib",
+    "test": "npm run test:lib && vitest run automata-visualizer/tests",
     "test:lib": "npm --workspace automata-lib test",
     "test:watch": "npm --workspace automata-lib run test:watch",
     "build:lib": "npm --workspace automata-lib run build",
