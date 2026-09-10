@@ -12,7 +12,7 @@ export class AutomataSerializer {
         const type: "NFA" | "DFA" = automata instanceof DFA ? "DFA" : "NFA";
 
         const states: SerializedState[] = automata.getStates().map((state) => {
-            const name = automata.getName(state.getId());
+            const name = automata.getStateName(state.getId());
 
             if (name === undefined) {
                 throw new Error(`State ${state.getId()} has no name`);

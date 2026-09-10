@@ -7,7 +7,7 @@ describe("Automata", () => {
 
     expect(automata.getStates()).toHaveLength(1);
     expect(automata.getStates()[0].getId()).toBe(0);
-    expect(automata.getName(0)).toBe("start");
+    expect(automata.getStateName(0)).toBe("start");
   });
 
   it("adds a state with a unique name", () => {
@@ -17,7 +17,7 @@ describe("Automata", () => {
 
     expect(state).not.toBeNull();
     expect(state?.getId()).toBe(1);
-    expect(automata.getName(1)).toBe("q1");
+    expect(automata.getStateName(1)).toBe("q1");
   });
 
   it("generates a unique name when adding a state without one", () => {
@@ -28,14 +28,14 @@ describe("Automata", () => {
 
     expect(first).not.toBeNull();
     expect(second).not.toBeNull();
-    expect(automata.getName(first!.getId())).toBe("q1");
-    expect(automata.getName(second!.getId())).toBe("q2");
+    expect(automata.getStateName(first!.getId())).toBe("q1");
+    expect(automata.getStateName(second!.getId())).toBe("q2");
   });
 
   it("keeps the initial state name from the constructor without a separate automaton name", () => {
     const automata = new Automata("start");
 
-    expect(automata.getName(0)).toBe("start");
+    expect(automata.getStateName(0)).toBe("start");
   });
 
   it("gets a state by id and marks it as accepting", () => {

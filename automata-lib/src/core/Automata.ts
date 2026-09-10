@@ -104,7 +104,7 @@ export class Automata {
         return [...this.transitions];
     }
 
-    getName(id : number) : string | undefined {
+    getStateName(id : number) : string | undefined {
         return this.names.get(id);
     }
 
