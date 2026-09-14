@@ -9,11 +9,11 @@ interface Props {
 function StateNode({ position, name, isAccepting }: Props) {
     return (
         <g>
-            <circle cx={position.x} cy={position.y} r={30} fill={isAccepting ? "green" : "gray"} />
+            <circle cx={position.x} cy={position.y} r={30} fill = "none" stroke="black" strokeWidth={1} />
             {isAccepting && (
-                <circle cx={position.x} cy={position.y} r={22} fill="none" stroke="white" strokeWidth={2} />
+                <circle cx={position.x} cy={position.y} r={28} fill="none" stroke="black" strokeWidth={1} />
             )}
-            <text x={position.x} y={position.y} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize={14}>
+            <text x={position.x} y={position.y} textAnchor="middle" dominantBaseline="middle" fill="black" fontSize={14}>
                 {name}
             </text>
         </g>

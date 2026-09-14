@@ -150,8 +150,8 @@ export class AutomataLayout {
         };
 
         return {
-            path: edgePath(from,to,curvature),
-            labelPosition: edgeLabelPosition(from,to,curvature),
+            path: edgePath(from, to, curvature, stateRadius),
+            labelPosition: edgeLabelPosition(from, to, curvature, stateRadius),
             label: label
         };
 

@@ -24,6 +24,22 @@ function Canvas({ width, height }: Props) {
       onMouseMove={handleMouseMove}
       onWheel={handleWheel}
     >
+      <defs>
+        <marker
+          id="arrow"
+          markerWidth="10"
+          markerHeight="10"
+          refX="7"
+          refY="3"
+          orient="auto"
+          markerUnits="strokeWidth"
+        >
+          <path d="M0,0 L0,6 L9,3 z" fill="black" />
+        </marker>
+      </defs>
+      {layoutRef.current.getEdgeGeometries().map((geom, i) => (
+        <TransitionEdge key={i} geometry={geom} />
+      ))}
       {automataRef.current.getStates().map(state => {
         const pos = layoutRef.current.getPosition(state.getId());
         const name : string | undefined = automataRef.current.getStateName(state.getId());
@@ -34,9 +50,6 @@ function Canvas({ width, height }: Props) {
           <StateNode key={state.getId()} position={pos} name={name} isAccepting={state.getAcceptance()} />
         );
       })}
-      {layoutRef.current.getEdgeGeometries().map((geom, i) => (
-        <TransitionEdge key={i} geometry={geom} />
-      ))}
     </svg>
   );
 }

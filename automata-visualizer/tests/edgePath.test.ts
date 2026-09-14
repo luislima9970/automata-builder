@@ -44,6 +44,12 @@ describe("edgePath", () => {
         expect(path).not.toContain("NaN");
     });
 
+    it("shortens a straight edge to the state boundary when a radius is provided", () => {
+        const path = edgePath({ x: 0, y: 0 }, { x: 100, y: 0 }, 0, 30);
+
+        expect(path).toBe("M 30 0 L 70 0");
+    });
+
     it("creates a self-loop path", () => {
         const path = selfLoopPath({ x: 100, y: 100 }, 30, 40);
 
