@@ -1,8 +1,15 @@
-import { useRef, useReducer } from "react";
+import { useRef, useReducer, useEffect } from "react";
 import { Camera } from "../../../automata-visualizer/src/Camera.js";
 
-function Canvas() {
-    const cameraRef = useRef(new Camera(0, 0, 1, 800, 600));
+interface Props {
+
+    height: number;
+    width: number;
+
+};
+
+function Canvas({ height, width }: Props) {
+    const cameraRef = useRef(new Camera(0, 0, 1, height, width));
     const [, forceRender] = useReducer(x => x + 1, 0);
 
     function handleMouseMove(e: React.MouseEvent) {
@@ -11,6 +18,11 @@ function Canvas() {
             forceRender();
         }
     }
+
+    useEffect(() => {
+        cameraRef.current.resize(width, height);
+        forceRender();
+    }, [width, height]);
 
     function handleWheel(e: React.WheelEvent) {
         const factor = e.deltaY < 0 ? 1.1 : 0.9;
@@ -24,8 +36,8 @@ function Canvas() {
 
     return (
         <svg
-            width={800}
-            height={600}
+            width={width}
+            height={height}
             viewBox={cameraRef.current.viewBoxString}
             style={{ border: "1px solid black" }}
             onMouseMove={handleMouseMove}
