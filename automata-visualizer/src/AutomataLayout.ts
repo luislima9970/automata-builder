@@ -3,7 +3,7 @@ import type { Transition } from '../../automata-lib/src/core/Transition.js';
 import type { Position } from './Position.js';
 import type { EdgeGeometry } from './EdgeGeometry.js';
 import type { VisualTransition } from './VisualTransition.js'
-import {edgePath, edgeLabelPosition, selfLoopPath, selfLoopLabelPosition } from "./edgePath.js";
+import { edgePath, edgeLabelPosition, selfLoopPath, selfLoopLabelPosition } from "./edgePath.js";
 
 export class AutomataLayout {
     private readonly automata: Automata;
@@ -18,7 +18,7 @@ export class AutomataLayout {
         this.sync();
     }
 
-    sync() : void {
+    sync(): void {
 
         this.syncPositions();
         this.syncVisualTransitions();
@@ -35,24 +35,54 @@ export class AutomataLayout {
             }
         }
 
-        for (const [index, state] of states.entries()) {
-            if (!this.positions.has(state.getId())) {
-                this.positions.set(
-                    state.getId(),
-                    this.createPosition(index)
-                );
-            }
+        const newStateIds = states
+            .map((state) => state.getId())
+            .filter((id) => !this.positions.has(id));
+
+        if (newStateIds.length === 0) return;
+
+        const levels = this.computeLevels();
+        const countPerLevel = new Map<number, number>();
+
+        for (const stateId of newStateIds) {
+            const level = levels.get(stateId) ?? 0;
+            const indexInLevel = countPerLevel.get(level) ?? 0;
+            countPerLevel.set(level, indexInLevel + 1);
+
+            this.positions.set(stateId, this.createPosition(level, indexInLevel));
         }
     }
 
-    private createPosition(index: number): Position {
+    private computeLevels(): Map<number, number> {
+        const levels = new Map<number, number>();
+        const start = this.automata.getStartStateId();
+
+        const queue: number[] = [start];
+        levels.set(start, 0);
+
+        while (queue.length > 0) {
+            const current = queue.shift()!;
+            const currentLevel = levels.get(current)!;
+
+            for (const transition of this.automata.getTransitions()) {
+                if (transition.from === current && !levels.has(transition.to)) {
+                    levels.set(transition.to, currentLevel + 1);
+                    queue.push(transition.to);
+                }
+            }
+        }
+
+        return levels;
+    }
+
+    private createPosition(index: number,indexInLevel: number): Position {
         return {
             x: 150 + index * 180,
-            y: 200
+            y: 150 + indexInLevel * 120
         };
     }
 
-    
+
     private syncVisualTransitions(): void {
         const nextVisualTransitions = new Map<string, VisualTransition>();
 
@@ -80,7 +110,7 @@ export class AutomataLayout {
         }
     }
 
-    private edgeKey(fromId: number, toId : number): string {
+    private edgeKey(fromId: number, toId: number): string {
         return `${fromId}:${toId}`;
     }
     setCurvature(fromId: number, toId: number, curvature: number): boolean {
@@ -132,21 +162,21 @@ export class AutomataLayout {
         return ans;
     }
 
-    
-    private createEdgeGeometry(fromId : number, toId : number,label : string, curvature : number = 0, stateRadius : number = 30) : EdgeGeometry {
 
-        const from : Position | undefined = this.positions.get(fromId);
-        const to : Position | undefined = this.positions.get(toId);
+    private createEdgeGeometry(fromId: number, toId: number, label: string, curvature: number = 0, stateRadius: number = 30): EdgeGeometry {
+
+        const from: Position | undefined = this.positions.get(fromId);
+        const to: Position | undefined = this.positions.get(toId);
 
         if (from === undefined || to === undefined) {
-        throw new Error(`Missing position for edge ${fromId} -> ${toId}`);
-        }   
+            throw new Error(`Missing position for edge ${fromId} -> ${toId}`);
+        }
 
 
         if (fromId === toId) return {
-            path: selfLoopPath(from,stateRadius),
-            labelPosition: selfLoopLabelPosition(from,stateRadius),
-            label: label 
+            path: selfLoopPath(from, stateRadius),
+            labelPosition: selfLoopLabelPosition(from, stateRadius),
+            label: label
         };
 
         return {
