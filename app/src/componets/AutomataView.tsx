@@ -1,14 +1,16 @@
-import { useRef } from "react";
-import { AutomataLayout } from "../../../automata-visualizer/src/AutomataLayout.js";
-import { buildSampleAutomata } from "../data/sampleAutomata";
+import type { Automata } from "../../../automata-lib/src/core/Automata.js";
+import type { AutomataLayout } from "../../../automata-visualizer/src/AutomataLayout.js";
 import StateNode from "./StateNode";
 import TransitionEdge from "./TransitionEdge";
 
-function AutomataView() {
-    const automataRef = useRef(buildSampleAutomata());
-    const layoutRef = useRef(new AutomataLayout(automataRef.current));
+interface Props {
+    automata: Automata;
+    layout: AutomataLayout;
+    onNodeMouseDown: (stateId: number) => void;
+}
 
-    const startStateId = automataRef.current.getStartStateId();
+function AutomataView({ automata, layout, onNodeMouseDown }: Props) {
+    const startStateId = automata.getStartStateId();
 
     return (
         <>
@@ -17,13 +19,12 @@ function AutomataView() {
                     <path d="M0,0 L0,6 L9,3 z" fill="black" />
                 </marker>
             </defs>
-            {layoutRef.current.getEdgeGeometries().map((geom, i) => (
+            {layout.getEdgeGeometries().map((geom, i) => (
                 <TransitionEdge key={i} geometry={geom} />
             ))}
-            {automataRef.current.getStates().map(state => {
-                const pos = layoutRef.current.getPosition(state.getId());
-                const name = automataRef.current.getStateName(state.getId());
-
+            {automata.getStates().map(state => {
+                const pos = layout.getPosition(state.getId());
+                const name = automata.getStateName(state.getId());
                 if (name === undefined || !pos) return null;
 
                 return (
@@ -33,6 +34,10 @@ function AutomataView() {
                         name={name}
                         isAccepting={state.getAcceptance()}
                         isStart={state.getId() === startStateId}
+                        onMouseDown={(e) => {
+                            e.stopPropagation();
+                            onNodeMouseDown(state.getId());
+                        }}
                     />
                 );
             })}

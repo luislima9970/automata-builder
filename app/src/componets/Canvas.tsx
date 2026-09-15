@@ -1,5 +1,7 @@
 import AutomataView from "./AutomataView"
 import { useCamera } from "../hooks/useCamera";
+import { useAutomataLayout } from "../hooks/useAutomataLayout";
+import { useNodeDrag } from "../hooks/useNodeDrag";
 
 
 interface Props {
@@ -8,11 +10,18 @@ interface Props {
 }
 
 function Canvas({ width, height }: Props) {
-  const { camera, handleMouseMove, handleWheel } = useCamera(width, height);
+  const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
+  const { automata, layout, moveState } = useAutomataLayout();
+  const { startDrag, handleDragMove, endDrag } = useNodeDrag(moveState);
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const wasDragging = handleDragMove(e);
+    if (!wasDragging) handleCameraMove(e);
+  }
 
   return (
-    <svg width={width} height={height} viewBox={camera.viewBoxString} style={{ border: "1px solid black" }} onMouseMove={handleMouseMove} onWheel={handleWheel}>
-      <AutomataView />
+    <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onContextMenu={(e) => e.preventDefault()}>
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={startDrag}/>
     </svg>
   );
 }

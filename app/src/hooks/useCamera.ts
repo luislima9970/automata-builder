@@ -11,7 +11,7 @@ export function useCamera(width: number, height: number) {
     }, [width, height]);
 
     function handleMouseMove(e: React.MouseEvent) {
-        if (e.buttons === 1) {
+        if (e.buttons === 2) {
             cameraRef.current.pan(e.movementX, e.movementY);
             forceRender();
         }

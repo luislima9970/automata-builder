@@ -5,12 +5,14 @@ interface Props {
     name: string;
     isAccepting: boolean;
     isStart : boolean;
+    onMouseDown: (e: React.MouseEvent) => void;
 }
 
-function StateNode({ position, name, isAccepting,isStart }: Props) {
+function StateNode({ position, name, isAccepting,isStart, onMouseDown }: Props) {
     return (
-        <g>
-            <circle cx={position.x} cy={position.y} r={30} fill = "none" stroke={(isStart ? "green" : "black")} strokeWidth={1} />
+        <g onMouseDown={onMouseDown}>
+
+            <circle cx={position.x} cy={position.y} r={30} fill = "white" stroke={(isStart ? "green" : "black")} strokeWidth={1} />
             {isAccepting && (
                 <circle cx={position.x} cy={position.y} r={28} fill="none" stroke="black" strokeWidth={1} />
             )}
