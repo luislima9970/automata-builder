@@ -154,11 +154,13 @@ export class AutomataLayout {
             const to : number = visualTransition.transitions[0].to;
 
             if (visited.has(this.edgeKey(to,from))){
+                if (visualTransition.curvature === 0)
                 visualTransition.curvature = 40;
                 const vt : VisualTransition | undefined = this.visualTransitions.get(this.edgeKey(to,from));
 
                 if (vt === undefined) return;
 
+                if (vt.curvature === 0)
                 vt.curvature = 40;
             }
 
