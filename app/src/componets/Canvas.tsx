@@ -25,13 +25,17 @@ function Canvas({ width, height, selectedTool }: Props) {
     if (!wasDragging) handleCameraMove(e);
   }
 
-  function createState(e: React.MouseEvent): boolean {
+  function createState(e: React.MouseEvent<SVGSVGElement>): boolean {
 
     const s: State | null = automata.addState();
 
+    const svg = e.currentTarget;
+
+    const rect = svg.getBoundingClientRect();
+
     if (s === null) return false;
 
-    const p: Position = camera.screenToWorld(e.clientX, e.clientY);
+    const p: Position = camera.screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
 
     
     layout.setPosition(s.getId(), p);
