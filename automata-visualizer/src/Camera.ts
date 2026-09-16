@@ -69,6 +69,13 @@ export class Camera {
         return Math.max(min, Math.min(max, value));
     }
 
+    screenToWorld(screenX: number, screenY: number): Position {
+        return {
+            x: this.topLeft.x + screenX / this.zoom,
+            y: this.topLeft.y + screenY / this.zoom,
+        };
+    }
+
 
 }
 

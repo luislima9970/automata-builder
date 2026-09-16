@@ -13,6 +13,11 @@ function App() {
 
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
 
+  function handleToolSelect(tool: Tool) {
+    setSelectedTool(tool);
+    console.log(tool);
+  }
+
   useEffect(() => {
     function handleResize() {
       setSize({
@@ -30,12 +35,13 @@ function App() {
     <main className="app">
       <Sidebar
         selectedTool={selectedTool}
-        onToolSelect={setSelectedTool}
+        onToolSelect={handleToolSelect}
       />
 
       <Canvas
         width={size.width - 88}
         height={size.height}
+        selectedTool={selectedTool}
       />
     </main>
   );

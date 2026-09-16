@@ -10,6 +10,11 @@ interface Props {
 function Sidebar({selectedTool,onToolSelect} : Props) {
   return (
     <aside className="sidebar">
+
+      <button className={selectedTool === 'pointer' ? 'sidebar-button select' : 'sidebar-button'} onClick={() => onToolSelect('pointer')} title='Pointer'>
+        🖱️
+      </button>
+
       <button className={selectedTool  === 'state' ? 'sidebar-button selected' : 'sidebar-button'}
       onClick={() => onToolSelect('state')}
       title="Add state">
