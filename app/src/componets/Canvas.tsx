@@ -12,7 +12,7 @@ interface Props {
 function Canvas({ width, height }: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
   const { automata, layout, moveState } = useAutomataLayout();
-  const { startDrag, handleDragMove, endDrag } = useNodeDrag(moveState);
+  const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
 
   function handleMouseMove(e: React.MouseEvent) {
     const wasDragging = handleDragMove(e);

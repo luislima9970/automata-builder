@@ -1,0 +1,1 @@
+export type Tool = 'pointer' | 'state' | 'transition' | 'epsilon'

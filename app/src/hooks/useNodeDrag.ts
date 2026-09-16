@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export function useNodeDrag(onMove: (stateId: number, dx: number, dy: number) => void) {
+export function useNodeDrag(zoom: number,onMove: (stateId: number, dx: number, dy: number) => void) {
     const draggingStateId = useRef<number | null>(null);
 
     function startDrag(stateId: number) {
@@ -9,7 +9,12 @@ export function useNodeDrag(onMove: (stateId: number, dx: number, dy: number) =>
 
     function handleDragMove(e: React.MouseEvent): boolean {
         if (draggingStateId.current === null) return false;
-        onMove(draggingStateId.current, e.movementX, e.movementY);
+
+        const worldDx = e.movementX / zoom;
+        const worldDy = e.movementY / zoom;
+
+        onMove(draggingStateId.current, worldDx, worldDy);
+
         return true;
     }
 
