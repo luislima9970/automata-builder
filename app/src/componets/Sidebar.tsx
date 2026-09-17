@@ -1,40 +1,34 @@
 import '../../css/Sidebar.css';
 import type { Tool } from '../data/Tool';
+import SidebarButton from './SidebarButton';
+
 
 interface Props {
   selectedTool: Tool;
   onToolSelect: (tool: Tool) => void;
 }
 
+interface SideButton {
 
-function Sidebar({selectedTool,onToolSelect} : Props) {
+  tool: Tool;
+  title: string;
+  label: string;
+
+
+}
+
+const buttons : SideButton[] = [{tool:'pointer',title:'Pointer',label:'P'},{tool:'state',title:'State',label:'○'},{tool:'transition',title:'Transtition',label:'→'},{tool:'erasor',title:'Erason',label:'X'}]
+
+
+function Sidebar({ selectedTool, onToolSelect }: Props) {
+
+  
+
   return (
     <aside className="sidebar">
-
-      <button className={selectedTool === 'pointer' ? 'sidebar-button select' : 'sidebar-button'} onClick={() => onToolSelect('pointer')} title='Pointer'>
-        🖱️
-      </button>
-
-      <button className={selectedTool  === 'state' ? 'sidebar-button selected' : 'sidebar-button'}
-      onClick={() => onToolSelect('state')}
-      title="Add state">
-        ○
-      </button>
-
-      <button className={selectedTool  === 'transition' ? 'sidebar-button selected' : 'sidebar-button'}
-      onClick={() => onToolSelect('transition')}
-      title="Add transition">
-        →
-      </button>
-
-      <button className={selectedTool  === 'epsilon' ? 'sidebar-button selected' : 'sidebar-button'}
-      onClick={() => onToolSelect('epsilon')}
-      title="Add epsilon transition">
-        <span className="epsilon-transition">
-          <span>ε</span>
-          <span>→</span>
-        </span>
-      </button>
+      {
+        buttons.map((button) => (<SidebarButton tool={button.tool} selectedTool={selectedTool} onToolSelect={onToolSelect} title={button.title} label={button.label} />))
+      }
     </aside>
   );
 }

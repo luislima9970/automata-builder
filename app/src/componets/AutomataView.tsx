@@ -7,9 +7,10 @@ interface Props {
     automata: Automata;
     layout: AutomataLayout;
     onNodeMouseDown: (stateId: number) => void;
+    onNodeClick: (stateId: number,e: React.MouseEvent) => void;
 }
 
-function AutomataView({ automata, layout, onNodeMouseDown }: Props) {
+function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick }: Props) {
     const startStateId = automata.getStartStateId();
 
     return (
@@ -37,6 +38,10 @@ function AutomataView({ automata, layout, onNodeMouseDown }: Props) {
                         onMouseDown={(e) => {
                             e.stopPropagation();
                             onNodeMouseDown(state.getId());
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onNodeClick(state.getId(),e);
                         }}
                     />
                 );

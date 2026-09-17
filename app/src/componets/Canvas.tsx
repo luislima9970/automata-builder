@@ -25,6 +25,20 @@ function Canvas({ width, height, selectedTool }: Props) {
     if (!wasDragging) handleCameraMove(e);
   }
 
+  function removeState(stateId: number): void {
+    automata.removeState(stateId);
+    layout.sync();
+  }
+
+  function handleNodeClick(stateId: number, e: React.MouseEvent): void {
+
+    if (selectedTool === 'erasor') {
+      removeState(stateId);
+      forceRender();
+    }
+
+  }
+
   function createState(e: React.MouseEvent<SVGSVGElement>): boolean {
 
     const s: State | null = automata.addState();
@@ -67,7 +81,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
   return (
     <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} />
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} />
     </svg>
   );
 }

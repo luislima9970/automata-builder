@@ -6,11 +6,12 @@ interface Props {
     isAccepting: boolean;
     isStart : boolean;
     onMouseDown: (e: React.MouseEvent) => void;
+    onClick: (e: React.MouseEvent) => void;
 }
 
-function StateNode({ position, name, isAccepting,isStart, onMouseDown }: Props) {
+function StateNode({ position, name, isAccepting,isStart, onMouseDown, onClick }: Props) {
     return (
-        <g onMouseDown={onMouseDown}>
+        <g onMouseDown={onMouseDown} onClick={onClick}>
 
             <circle cx={position.x} cy={position.y} r={30} fill = "white" stroke={(isStart ? "green" : "black")} strokeWidth={1} />
             {isAccepting && (
