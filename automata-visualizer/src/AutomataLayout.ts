@@ -27,37 +27,83 @@ export class AutomataLayout {
     }
 
     private syncPositions(): void {
+    const states = this.automata.getStates();
+    const validStateIds = new Set(states.map((state) => state.getId()));
 
-        const states = this.automata.getStates();
-        const validStateIds = new Set(states.map((state) => state.getId()));
-
-        for (const stateId of this.positions.keys()) {
-            if (!validStateIds.has(stateId)) {
-                this.positions.delete(stateId);
-            }
-        }
-
-        const g = new dagre.graphlib.Graph();
-        g.setDefaultEdgeLabel(() => ({}));
-        g.setGraph({ rankdir: "LR", nodesep: 60, ranksep: 100 });
-
-        for (const state of states) {
-            g.setNode(String(state.getId()), { width: 60, height: 60 });
-        }
-
-        for (const transition of this.automata.getTransitions()) {
-            if (transition.from !== transition.to) {
-                g.setEdge(String(transition.from), String(transition.to));
-            }
-        }
-
-        dagre.layout(g);
-
-        for (const state of states) {
-            const node = g.node(String(state.getId()));
-            this.positions.set(state.getId(), { x: node.x, y: node.y });
+    for (const stateId of this.positions.keys()) {
+        if (!validStateIds.has(stateId)) {
+            this.positions.delete(stateId);
         }
     }
+
+    const newStates = states.filter((state) => !this.positions.has(state.getId()));
+    if (newStates.length === 0) return;
+
+    const computedPositions = this.computeDagreLayout(states);
+
+    for (const state of newStates) {
+        const pos = computedPositions.get(state.getId());
+        if (pos !== undefined) {
+            this.positions.set(state.getId(), pos);
+        }
+    }
+}
+
+private computeDagreLayout(states: State[]): Map<number, Position> {
+    const g = new dagre.graphlib.Graph();
+    g.setDefaultEdgeLabel(() => ({}));
+    g.setGraph({ rankdir: "LR", nodesep: 60, ranksep: 100, marginx: 120, marginy: 120 });
+
+    for (const state of states) {
+        g.setNode(String(state.getId()), { width: 60, height: 60 });
+    }
+
+    for (const transition of this.automata.getTransitions()) {
+        if (transition.from !== transition.to) {
+            g.setEdge(String(transition.from), String(transition.to));
+        }
+    }
+
+    dagre.layout(g);
+
+    const positions = new Map<number, Position>();
+    const orderedStates = [...states].sort((left, right) => left.getId() - right.getId());
+
+    if (orderedStates.length <= 2) {
+        const defaultPositions = [
+            { x: 150, y: 200 },
+            { x: 330, y: 200 }
+        ];
+
+        for (const [index, state] of orderedStates.entries()) {
+            positions.set(state.getId(), defaultPositions[index] ?? { x: 150 + index * 180, y: 200 });
+        }
+
+        return positions;
+    }
+
+    const positionedNodes = orderedStates.map((state) => ({
+        state,
+        node: g.node(String(state.getId()))
+    }));
+
+    const minX = Math.min(...positionedNodes.map(({ node }) => node.x));
+    const maxX = Math.max(...positionedNodes.map(({ node }) => node.x));
+    const minY = Math.min(...positionedNodes.map(({ node }) => node.y));
+    const maxY = Math.max(...positionedNodes.map(({ node }) => node.y));
+
+    const translationX = 150 - (minX + (maxX - minX) / 2);
+    const translationY = 200 - (minY + (maxY - minY) / 2);
+
+    for (const { state, node } of positionedNodes) {
+        positions.set(state.getId(), {
+            x: node.x + translationX,
+            y: node.y + translationY
+        });
+    }
+
+    return positions;
+}
 
 
 
