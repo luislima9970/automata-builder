@@ -8,9 +8,10 @@ interface Props {
     layout: AutomataLayout;
     onNodeMouseDown: (stateId: number) => void;
     onNodeClick: (stateId: number,e: React.MouseEvent) => void;
+    onEdgeClick: (fromStateId: number, toStateId: number, e: React.MouseEvent) => void;
 }
 
-function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick }: Props) {
+function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick,onEdgeClick }: Props) {
     const startStateId = automata.getStartStateId();
 
     return (
