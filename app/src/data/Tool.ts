@@ -1,1 +1,1 @@
-export type Tool = 'pointer' | 'state' | 'transition' | 'epsilon' | 'erasor'
+export type Tool = 'pointer' | 'state' | 'transition' | 'epsilon' | 'erasor' | 'accept'

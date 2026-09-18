@@ -30,12 +30,53 @@ function Canvas({ width, height, selectedTool }: Props) {
     layout.sync();
   }
 
+  function toggleAcceptanceState(stateId : number){
+
+    automata.getState(stateId)?.toggleAcceptance();
+    layout.sync();
+  }
+
+  function removeEdge(fromId: number, toId: number): void {
+
+    automata.getTransitions().map((t) => {
+
+      if (t.from === fromId && t.to === toId) {
+        automata.removeTransition(t);
+      }
+
+    });
+
+
+    layout.sync();
+
+  }
+
+  function handleEdgeClick(fromId: number, toId: number): void {
+
+    if (selectedTool === 'erasor') {
+
+      removeEdge(fromId, toId);
+      forceRender();
+
+    }
+
+
+
+  }
+
   function handleNodeClick(stateId: number, e: React.MouseEvent): void {
 
     if (selectedTool === 'erasor') {
+
       removeState(stateId);
-      forceRender();
+
+    } else  if (selectedTool === 'accept'){
+
+      toggleAcceptanceState(stateId);
+      
     }
+
+    forceRender()
 
   }
 
@@ -51,7 +92,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
     const p: Position = camera.screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
 
-    
+
     layout.setPosition(s.getId(), p);
 
     return true;
@@ -64,9 +105,9 @@ function Canvas({ width, height, selectedTool }: Props) {
     if (e.target !== e.currentTarget) return;
 
     createState(e);
-    
+
     forceRender();
-    
+
 
   }
 
@@ -81,7 +122,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
   return (
     <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} />
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} />
     </svg>
   );
 }

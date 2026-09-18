@@ -17,7 +17,7 @@ interface SideButton {
 
 }
 
-const buttons : SideButton[] = [{tool:'pointer',title:'Pointer',label:'P'},{tool:'state',title:'State',label:'○'},{tool:'transition',title:'Transtition',label:'→'},{tool:'erasor',title:'Erason',label:'X'}]
+const buttons : SideButton[] = [{tool:'pointer',title:'Pointer',label:'P'},{tool:'state',title:'State',label:'○'},{tool:'transition',title:'Transtition',label:'→'},{tool:'erasor',title:'Erason',label:'X'},{tool:'accept',title:'Accept State',label:'A'},];
 
 
 function Sidebar({ selectedTool, onToolSelect }: Props) {
@@ -27,7 +27,7 @@ function Sidebar({ selectedTool, onToolSelect }: Props) {
   return (
     <aside className="sidebar">
       {
-        buttons.map((button) => (<SidebarButton tool={button.tool} selectedTool={selectedTool} onToolSelect={onToolSelect} title={button.title} label={button.label} />))
+        buttons.map((button) => (<SidebarButton key={button.tool} tool={button.tool} selectedTool={selectedTool} onToolSelect={onToolSelect} title={button.title} label={button.label} />))
       }
     </aside>
   );

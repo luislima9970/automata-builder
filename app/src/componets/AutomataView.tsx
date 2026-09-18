@@ -7,11 +7,11 @@ interface Props {
     automata: Automata;
     layout: AutomataLayout;
     onNodeMouseDown: (stateId: number) => void;
-    onNodeClick: (stateId: number,e: React.MouseEvent) => void;
+    onNodeClick: (stateId: number, e: React.MouseEvent) => void;
     onEdgeClick: (fromStateId: number, toStateId: number, e: React.MouseEvent) => void;
 }
 
-function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick,onEdgeClick }: Props) {
+function AutomataView({ automata, layout, onNodeMouseDown, onNodeClick, onEdgeClick }: Props) {
     const startStateId = automata.getStartStateId();
 
     return (
@@ -21,8 +21,12 @@ function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick,onEdgeClic
                     <path d="M0,0 L0,6 L9,3 z" fill="black" />
                 </marker>
             </defs>
-            {layout.getEdgeGeometries().map((geom, i) => (
-                <TransitionEdge key={i} geometry={geom} />
+            {layout.getEdgeRenders().map((geom, i) => (
+                <TransitionEdge key={i} geometry={geom.geometry} onClick={(e) => {
+                    e.stopPropagation();
+                    onEdgeClick(geom.fromId,geom.toId,e);
+
+                }} />
             ))}
             {automata.getStates().map(state => {
                 const pos = layout.getPosition(state.getId());
@@ -42,7 +46,7 @@ function AutomataView({ automata, layout, onNodeMouseDown,onNodeClick,onEdgeClic
                         }}
                         onClick={(e) => {
                             e.stopPropagation();
-                            onNodeClick(state.getId(),e);
+                            onNodeClick(state.getId(), e);
                         }}
                     />
                 );
