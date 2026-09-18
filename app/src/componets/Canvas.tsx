@@ -5,7 +5,9 @@ import { useNodeDrag } from "../hooks/useNodeDrag";
 import type { Tool } from "../data/Tool.js"
 import { State } from "automata-lib/src/core/State.js";
 import { Position } from "../../../automata-visualizer/src/Position.js";
+import { useEdgeDraw } from "../hooks/useEdgeDraw.js";
 import { useReducer } from "react";
+import { Transition } from "automata-lib/src/core/Transition.js";
 
 
 interface Props {
@@ -19,6 +21,11 @@ function Canvas({ width, height, selectedTool }: Props) {
   const { automata, layout, moveState } = useAutomataLayout();
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
+  const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId) => {
+    const t: Transition = { from: fromId, to: toId, symbol: null };
+    automata.addTransition(t);
+    layout.sync();
+  });
 
   function handleMouseMove(e: React.MouseEvent) {
     const wasDragging = handleDragMove(e);
@@ -30,7 +37,7 @@ function Canvas({ width, height, selectedTool }: Props) {
     layout.sync();
   }
 
-  function toggleAcceptanceState(stateId : number){
+  function toggleAcceptanceState(stateId: number) {
 
     automata.getState(stateId)?.toggleAcceptance();
     layout.sync();
@@ -70,10 +77,14 @@ function Canvas({ width, height, selectedTool }: Props) {
 
       removeState(stateId);
 
-    } else  if (selectedTool === 'accept'){
+    } else if (selectedTool === 'accept') {
 
       toggleAcceptanceState(stateId);
-      
+
+    } else if (selectedTool === 'transition') {
+
+      handleStateClick(stateId);
+      forceRender();
     }
 
     forceRender()
@@ -100,11 +111,16 @@ function Canvas({ width, height, selectedTool }: Props) {
   }
 
   function handleCanvasClick(e: React.MouseEvent<SVGSVGElement>) {
-    if (selectedTool !== 'state') return;
 
-    if (e.target !== e.currentTarget) return;
+    if (selectedTool === 'state') {
 
-    createState(e);
+      createState(e);
+
+    } else if (selectedTool === 'epsilon') {
+
+      cancel();
+
+    }
 
     forceRender();
 

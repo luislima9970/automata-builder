@@ -4,7 +4,7 @@ import { Transition } from "../../../automata-lib/src/core/Transition.js";
 import { Automata } from "../../../automata-lib/src/core/Automata.js";
 
 export function buildSampleAutomata(): Automata {
-  const nfa : NFA = NFABuilder.buildRegex("(a|b)+");
+  const nfa : NFA = NFABuilder.buildRegex("a");
 
   return nfa;
 }
