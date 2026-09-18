@@ -15,7 +15,7 @@ function StateNode({ position, name, isAccepting,isStart, onMouseDown, onClick }
 
             <circle cx={position.x} cy={position.y} r={30} fill = "white" stroke={(isStart ? "green" : "black")} strokeWidth={1} />
             {isAccepting && (
-                <circle cx={position.x} cy={position.y} r={28} fill="none" stroke="black" strokeWidth={1} />
+                <circle cx={position.x} cy={position.y} r={28} fill="none" stroke={isStart ? 'green' : 'black'} strokeWidth={1} />
             )}
             <text x={position.x} y={position.y} textAnchor="middle" dominantBaseline="middle" fill="black" fontSize={14}>
                 {name}
