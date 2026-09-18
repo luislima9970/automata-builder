@@ -138,7 +138,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
   return (
     <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} />
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} />
     </svg>
   );
 }

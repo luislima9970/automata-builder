@@ -6,12 +6,13 @@ import TransitionEdge from "./TransitionEdge";
 interface Props {
     automata: Automata;
     layout: AutomataLayout;
+    selectedId : number;
     onNodeMouseDown: (stateId: number) => void;
     onNodeClick: (stateId: number, e: React.MouseEvent) => void;
     onEdgeClick: (fromStateId: number, toStateId: number, e: React.MouseEvent) => void;
 }
 
-function AutomataView({ automata, layout, onNodeMouseDown, onNodeClick, onEdgeClick }: Props) {
+function AutomataView({ automata, layout,selectedId, onNodeMouseDown, onNodeClick, onEdgeClick }: Props) {
     const startStateId = automata.getStartStateId();
 
     return (
@@ -40,6 +41,7 @@ function AutomataView({ automata, layout, onNodeMouseDown, onNodeClick, onEdgeCl
                         name={name}
                         isAccepting={state.getAcceptance()}
                         isStart={state.getId() === startStateId}
+                        isSelected={state.getId() === selectedId}
                         onMouseDown={(e) => {
                             e.stopPropagation();
                             onNodeMouseDown(state.getId());
