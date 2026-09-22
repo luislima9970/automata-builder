@@ -8,21 +8,23 @@ import { Position } from "../../../automata-visualizer/src/Position.js";
 import { useEdgeDraw } from "../hooks/useEdgeDraw.js";
 import { useEffect, useReducer } from "react";
 import { Transition } from "automata-lib/src/core/Transition.js";
+import { ToolSettings } from "../data/ToolSettings.js";
 
 
 interface Props {
   width: number;
   height: number;
   selectedTool: Tool;
+  toolSettings : ToolSettings;
 }
 
-function Canvas({ width, height, selectedTool }: Props) {
+function Canvas({ width, height, selectedTool,toolSettings }: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
   const { automata, layout, moveState } = useAutomataLayout();
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
-  const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId) => {
-    const t: Transition = { from: fromId, to: toId, symbol: null };
+  const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId,symbol) => {
+    const t: Transition = { from: fromId, to: toId, symbol: symbol };
     automata.addTransition(t);
     layout.sync();
   });
@@ -89,7 +91,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
     } else if (selectedTool === 'transition') {
 
-      handleStateClick(stateId);
+      handleStateClick(stateId,((toolSettings.transitionSymbol == '' || toolSettings.transitionSymbol == 'ε') ? null : toolSettings.transitionSymbol));
       forceRender();
     }
 

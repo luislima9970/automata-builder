@@ -4,6 +4,8 @@ import Sidebar from './componets/Sidebar';
 import type { Tool } from './data/Tool';
 
 import './App.css';
+import { defaultToolSettings, ToolSettings } from './data/ToolSettings';
+import Topbar from './componets/Topbar/TopBar';
 
 function App() {
   const [size, setSize] = useState({
@@ -12,6 +14,7 @@ function App() {
   });
 
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
+  const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
 
   function handleToolSelect(tool: Tool) {
     setSelectedTool(tool);
@@ -33,16 +36,22 @@ function App() {
 
   return (
     <main className="app">
-      <Sidebar
-        selectedTool={selectedTool}
-        onToolSelect={handleToolSelect}
-      />
+      <Sidebar selectedTool={selectedTool} onToolSelect={handleToolSelect} />
 
-      <Canvas
-        width={size.width - 88}
-        height={size.height}
-        selectedTool={selectedTool}
-      />
+      <div className="workspace">
+        <Topbar
+          selectedTool={selectedTool}
+          toolSettings={toolSettings}
+          onToolSettingsChange={setToolSettings}
+        />
+
+        <Canvas
+          width={size.width - 88}
+          height={size.height}
+          selectedTool={selectedTool}
+          toolSettings={toolSettings}
+        />
+      </div>
     </main>
   );
 }

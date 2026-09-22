@@ -1,15 +1,15 @@
 import { useRef } from "react";
 
-export function useEdgeDraw(onComplete: (fromId: number, toId: number) => void) {
+export function useEdgeDraw(onComplete: (fromId: number, toId: number,symbol : string | null) => void) {
     const fromStateId = useRef<number | null>(null);
 
-    function handleStateClick(stateId: number): boolean {
+    function handleStateClick(stateId: number,symbol : string | null): boolean {
         if (fromStateId.current === null) {
             fromStateId.current = stateId;
             return true; 
         }
 
-        onComplete(fromStateId.current, stateId);
+        onComplete(fromStateId.current, stateId,symbol);
         fromStateId.current = null;
         return true; 
     }
