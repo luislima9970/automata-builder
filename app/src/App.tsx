@@ -36,14 +36,14 @@ function App() {
 
   return (
     <main className="app">
-      <Sidebar selectedTool={selectedTool} onToolSelect={handleToolSelect} />
+      <Topbar
+        selectedTool={selectedTool}
+        toolSettings={toolSettings}
+        onToolSettingsChange={setToolSettings}
+      />
 
       <div className="workspace">
-        <Topbar
-          selectedTool={selectedTool}
-          toolSettings={toolSettings}
-          onToolSettingsChange={setToolSettings}
-        />
+        <Sidebar selectedTool={selectedTool} onToolSelect={handleToolSelect} />
 
         <Canvas
           width={size.width - 88}
