@@ -1,0 +1,35 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.topbar-hint {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.topbar-input {
+  width: 40px;
+  height: 26px;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #111827;
+  font-size: 14px;
+}
+
+.topbar-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}

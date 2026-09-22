@@ -11,7 +11,7 @@ function TransitionTopbar({ symbol, onSymbolChange }: Props) {
             className="topbar-input"
             value={symbol}
             onChange={(e) => onSymbolChange(e.target.value)}
-            placeholder="symbol"
+            placeholder="ε"
             maxLength={1}
         />
     );
