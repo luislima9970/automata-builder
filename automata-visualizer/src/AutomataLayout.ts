@@ -222,6 +222,12 @@ export class AutomataLayout {
 
                 if (vt.curvature === 0)
                     vt.curvature = 40;
+            } else {
+
+                if (visualTransition.curvature === 40){
+                    visualTransition.curvature = 0;
+                }
+
             }
 
             visited.add(this.edgeKey(from, to));

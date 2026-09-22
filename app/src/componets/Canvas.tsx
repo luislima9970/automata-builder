@@ -6,7 +6,7 @@ import type { Tool } from "../data/Tool.js"
 import { State } from "automata-lib/src/core/State.js";
 import { Position } from "../../../automata-visualizer/src/Position.js";
 import { useEdgeDraw } from "../hooks/useEdgeDraw.js";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Transition } from "automata-lib/src/core/Transition.js";
 
 
@@ -26,6 +26,12 @@ function Canvas({ width, height, selectedTool }: Props) {
     automata.addTransition(t);
     layout.sync();
   });
+
+  useEffect(() =>{
+
+    cancel();
+    forceRender();
+  },[selectedTool])
 
   function handleMouseMove(e: React.MouseEvent) {
     const wasDragging = handleDragMove(e);
@@ -116,7 +122,7 @@ function Canvas({ width, height, selectedTool }: Props) {
 
       createState(e);
 
-    } else if (selectedTool === 'epsilon') {
+    } else if (selectedTool === 'transition') {
 
       cancel();
 
