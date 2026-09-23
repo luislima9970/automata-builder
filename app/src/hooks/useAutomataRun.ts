@@ -5,7 +5,13 @@ import type { RunResult } from "../../../automata-lib/src/core/RunResult.js";
 export function useAutomataRun(automata: Automata) {
     const [word, setWord] = useState("");
     const [result, setResult] = useState<RunResult | null>(null);
-    const [_, setStepIndex] = useState<number>(0);
+    const [stepIndex, setStepIndex] = useState<number>(0);
+
+    const backDisabled =
+        result === null || stepIndex === 0;
+
+    const forwardDisabled =
+        result === null || stepIndex >= result.transitions.length;
 
     function onWordChange(newWord: string) {
         setWord(newWord);
@@ -28,5 +34,5 @@ export function useAutomataRun(automata: Automata) {
         setStepIndex((i) => Math.max(i - 1, 0));
     }
 
-    return { word, onWordChange, onRun, onForward, onBack };
+    return { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled };
 }

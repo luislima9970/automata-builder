@@ -164,11 +164,18 @@
     border-color 0.15s ease;
 }
 
-.undo-redo button:hover {
+.undo-redo button:not(:disabled):hover {
   background-color: #f8fafc;
   border-color: #bfc7d2;
 }
 
-.undo-redo button:active {
+.undo-redo button:not(:disabled):active {
   background-color: #f1f5f9;
+}
+
+.undo-redo button:disabled {
+  color: #aab2bf;
+  background-color: #f8fafc;
+  border-color: #e5e9f0;
+  cursor: not-allowed;
 }
