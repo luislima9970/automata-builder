@@ -15,3 +15,5 @@ function WordInput({ word, onChange }: Props) {
     </> );
 
 }
+
+export default WordInput;
