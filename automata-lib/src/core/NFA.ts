@@ -107,7 +107,7 @@ export class NFA extends Automata implements Acceptor {
 
     }
 
-    run(input: string): RunResult {
+    override run(input: string): RunResult {
         const start = this.getStartStateId();
         if (start === null) {
             return { transitions: [], finalStateIds: [], completed: false, accepted: false };
@@ -170,7 +170,7 @@ export class NFA extends Automata implements Acceptor {
         };
     }
 
-    accepts(input: string): boolean {
+    override accepts(input: string): boolean {
         const result = this.run(input);
 
         return result.accepted;

@@ -124,7 +124,7 @@ export class DFA extends Automata implements Acceptor {
         };
     }
 
-    accepts(input: string): boolean {
+    override accepts(input: string): boolean {
         const result = this.run(input);
 
         return result.accepted;

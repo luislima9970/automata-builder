@@ -147,4 +147,6 @@ export abstract class Automata {
 
     abstract run(input : string) : RunResult;
 
+    abstract accepts(input : string) : boolean;
+
 }

@@ -16,19 +16,18 @@ interface Props {
 
 
 
-function RunBar() {
-
-
-    function RunBar({ word, onWordChange, onRun, onBack, onForward }: Props) {
-        return (
-            <div className="run-bar">
-                <WordInput word={word} onChange={onWordChange} />
-                <RunButton onClick={onRun} />
-                <ForwardBackwardButtons onBack={onBack} onForward={onForward} />
-            </div>
-        );
-    }
 
 
 
+function RunBar({ word, onWordChange, onRun, onBack, onForward }: Props) {
+    return (
+        <div className="run-bar">
+            <WordInput word={word} onChange={onWordChange} />
+            <RunButton onClick={onRun} />
+            <ForwardBackwardButtons onBack={onBack} onForward={onForward} />
+        </div>
+    );
 }
+
+
+
