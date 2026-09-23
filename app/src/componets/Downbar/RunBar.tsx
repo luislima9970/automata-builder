@@ -1,23 +1,14 @@
-
 import ForwardBackwardButtons from './ForwardBackwardButtons';
 import RunButton from './RunButton';
 import WordInput from './WordInput'
 
 interface Props {
-
     word: string;
-    onWordChange: () => void;
+    onWordChange: (word: string) => void;
     onRun: () => void;
-    onBack(): () => void;
+    onBack: () => void;
     onForward: () => void;
-
-
 }
-
-
-
-
-
 
 function RunBar({ word, onWordChange, onRun, onBack, onForward }: Props) {
     return (
@@ -29,5 +20,4 @@ function RunBar({ word, onWordChange, onRun, onBack, onForward }: Props) {
     );
 }
 
-
-
+export default RunBar;

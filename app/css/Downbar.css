@@ -1,0 +1,174 @@
+.down-bar {
+  height: 68px;
+  flex-shrink: 0;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  padding: 0 18px;
+
+  background-color: #ffffff;
+  border-top: 1px solid #e5e9f0;
+
+  font-family: system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+
+/* Export */
+
+.export-button {
+  justify-self: start;
+
+  height: 38px;
+  padding: 0 22px;
+
+  background-color: #ffffff;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.export-button:hover {
+  background-color: #eff6ff;
+}
+
+.export-button:active {
+  background-color: #dbeafe;
+}
+
+
+/* Run controls */
+
+.run-controls {
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.run-controls label {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+
+/* Word input */
+
+#WordInput {
+  width: 225px;
+  height: 38px;
+
+  padding: 0 12px;
+
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  color: #111827;
+  font-family: inherit;
+  font-size: 14px;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+#WordInput:hover {
+  border-color: #9ca3af;
+}
+
+#WordInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* Run button */
+
+#runButton {
+  width: 94px;
+  height: 38px;
+
+  border: none;
+  border-radius: 6px;
+
+  background-color: #1261d8;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+#runButton:hover {
+  background-color: #0f55c1;
+}
+
+#runButton:active {
+  background-color: #0d4baa;
+  transform: translateY(1px);
+}
+
+
+/* Undo / Redo */
+
+.undo-redo {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.undo-redo button {
+  width: 42px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  background-color: #ffffff;
+  border: 1px solid #d7dde5;
+  border-radius: 7px;
+
+  color: #374151;
+  font-size: 22px;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.undo-redo button:hover {
+  background-color: #f8fafc;
+  border-color: #bfc7d2;
+}
+
+.undo-redo button:active {
+  background-color: #f1f5f9;
+}

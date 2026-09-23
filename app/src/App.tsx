@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import Canvas from './componets/Canvas';
 import Sidebar from './componets/Sidebar';
 import type { Tool } from './data/Tool';
-
 import './App.css';
 import { defaultToolSettings, ToolSettings } from './data/ToolSettings';
 import Topbar from './componets/Topbar/TopBar';
+import { useAutomataRun } from './hooks/useAutomataRun';
+import { useAutomataLayout } from './hooks/useAutomataLayout';
+import DownBar from './componets/Downbar/Downbar'
 
 function App() {
   const [size, setSize] = useState({
@@ -15,6 +17,9 @@ function App() {
 
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
+  const { automata, layout, moveState } = useAutomataLayout();
+  const { word, onWordChange, onRun, onBack, onForward, } = useAutomataRun(automata);
+
 
   function handleToolSelect(tool: Tool) {
     setSelectedTool(tool);
@@ -34,6 +39,11 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
+  function onExport(): void {
+    console.log("To implement!");
+  }
+
   return (
     <main className="app">
       <Topbar
@@ -43,15 +53,30 @@ function App() {
       />
 
       <div className="workspace">
-        <Sidebar selectedTool={selectedTool} onToolSelect={handleToolSelect} />
+        <Sidebar
+          selectedTool={selectedTool}
+          onToolSelect={handleToolSelect}
+        />
 
         <Canvas
-          width={size.width - 88}
-          height={size.height}
+          width={size.width - 72}
+          height={size.height - 44 - 68}
           selectedTool={selectedTool}
           toolSettings={toolSettings}
+          automata={automata}
+          layout={layout}
+          moveState={moveState}
         />
       </div>
+
+      <DownBar
+        word={word}
+        onWordChange={onWordChange}
+        onRun={onRun}
+        onBack={onBack}
+        onForward={onForward}
+        onExport={onExport}
+      />
     </main>
   );
 }

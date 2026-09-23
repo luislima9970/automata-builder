@@ -1,6 +1,5 @@
 import AutomataView from "./AutomataView"
 import { useCamera } from "../hooks/useCamera";
-import { useAutomataLayout } from "../hooks/useAutomataLayout";
 import { useNodeDrag } from "../hooks/useNodeDrag";
 import type { Tool } from "../data/Tool.js"
 import { State } from "automata-lib/src/core/State.js";
@@ -9,6 +8,8 @@ import { useEdgeDraw } from "../hooks/useEdgeDraw.js";
 import { useEffect, useReducer } from "react";
 import { Transition } from "automata-lib/src/core/Transition.js";
 import { ToolSettings } from "../data/ToolSettings.js";
+import { Automata } from "../../../automata-lib/src/core/Automata.js";
+import { AutomataLayout } from "../../../automata-visualizer/src/AutomataLayout.js";
 
 
 interface Props {
@@ -16,11 +17,13 @@ interface Props {
   height: number;
   selectedTool: Tool;
   toolSettings : ToolSettings;
+  automata : Automata;
+  layout : AutomataLayout;
+  moveState : (stateId : number, dx : number, dy: number) => void;
 }
 
-function Canvas({ width, height, selectedTool,toolSettings }: Props) {
+function Canvas({ width, height, selectedTool,toolSettings,automata,layout,moveState }: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
-  const { automata, layout, moveState } = useAutomataLayout();
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
   const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId,symbol) => {
