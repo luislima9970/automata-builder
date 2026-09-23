@@ -16,7 +16,7 @@ interface Props {
 
 
 
-function runBar() {
+function RunBar() {
 
 
     function RunBar({ word, onWordChange, onRun, onBack, onForward }: Props) {

@@ -1,19 +1,19 @@
 import { Automata } from "./Automata.js"
 import { State } from "./State.js"
 import type { Transition } from "./Transition.js"
-import type { DFARunResult } from "./RunResult.js"
+import type { RunResult } from "./RunResult.js"
 import type { Acceptor } from "./Acceptor.js"
 
 export class DFA extends Automata implements Acceptor {
 
-    private indexes : Map<number, Map<string | null, Transition>> | null = null;
+    private indexes: Map<number, Map<string | null, Transition>> | null = null;
 
-    constructor(name : string | null = "s"){
+    constructor(name: string | null = "s") {
         super(name);
     }
 
 
-    override addTransition(transition : Transition) : Transition | null {
+    override addTransition(transition: Transition): Transition | null {
 
         if (transition.symbol === null) return null;
 
@@ -30,7 +30,7 @@ export class DFA extends Automata implements Acceptor {
         return result;
     }
 
-    override removeTransition(transitionOrId : Transition | number) : boolean {
+    override removeTransition(transitionOrId: Transition | number): boolean {
         const removed = super.removeTransition(transitionOrId);
 
         if (removed) this.indexes = null;
@@ -38,7 +38,7 @@ export class DFA extends Automata implements Acceptor {
         return removed;
     }
 
-    override removeState(id : number) : boolean {
+    override removeState(id: number): boolean {
         const removed = super.removeState(id);
 
         if (removed) this.indexes = null;
@@ -47,7 +47,7 @@ export class DFA extends Automata implements Acceptor {
     }
 
 
-    getTransitionFor(currentId : number,symbol : string) : Transition | null {
+    getTransitionFor(currentId: number, symbol: string): Transition | null {
 
         if (this.indexes === null) this.buildIndexes();
 
@@ -58,9 +58,9 @@ export class DFA extends Automata implements Acceptor {
 
     }
 
-    nextState(currentId : number,symbol : string) : State | null{
+    nextState(currentId: number, symbol: string): State | null {
 
-        const transition = this.getTransitionFor(currentId,symbol);
+        const transition = this.getTransitionFor(currentId, symbol);
 
         if (transition === null) return null;
 
@@ -72,7 +72,7 @@ export class DFA extends Automata implements Acceptor {
 
     }
 
-    buildIndexes() : void {
+    buildIndexes(): void {
 
         if (this.indexes !== null) return;
 
@@ -91,41 +91,42 @@ export class DFA extends Automata implements Acceptor {
 
     }
 
-    run(input: string) : DFARunResult {
-
+    override run(input: string): RunResult {
         if (this.indexes === null) this.buildIndexes();
 
-        const transitions: Transition[] = [];
-
+        const transitions: Transition[][] = [];
         let currentStateId: number = this.startStateId;
 
         for (const symbol of input) {
             const symbolTransitions = this.indexes?.get(currentStateId);
             const transition = symbolTransitions?.get(symbol) ?? null;
 
-            if (transition === null) return {
-                transitions,
-                finalStateId : null,
-                completed : false
-            };
+            if (transition === null) {
+                return {
+                    transitions,
+                    finalStateIds: [],
+                    completed: false,
+                    accepted: false,
+                };
+            }
 
-            transitions.push(transition);
+            transitions.push([transition]);
             currentStateId = transition.to;
         }
 
+        const accepted = this.getState(currentStateId)?.getAcceptance() ?? false;
+
         return {
             transitions,
-            finalStateId : currentStateId,
-            completed : true
+            finalStateIds: [currentStateId],
+            completed: true,
+            accepted,
         };
     }
 
-    accepts(input: string) : boolean {
+    accepts(input: string): boolean {
         const result = this.run(input);
 
-        if (!result.completed || result.finalStateId === null) return false;
-
-        const finalState = this.states.find((state) => state.getId() === result.finalStateId);
-        return finalState !== undefined && finalState.getAcceptance();
+        return result.accepted;
     }
 }

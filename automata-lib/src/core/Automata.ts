@@ -1,8 +1,9 @@
+import type { RunResult } from "./RunResult.js";
 import { State } from "./State.js"
 import type { Transition } from "./Transition.js"
 
 
-export class Automata {
+export abstract class Automata {
 
     protected transitions : Transition[];
 
@@ -143,5 +144,7 @@ export class Automata {
             (transition) => transition.from !== id && transition.to !== id
         );
     }
+
+    abstract run(input : string) : RunResult;
 
 }
