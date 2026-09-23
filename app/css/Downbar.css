@@ -15,7 +15,6 @@
   box-sizing: border-box;
 }
 
-
 /* Export */
 
 .export-button {
@@ -47,7 +46,6 @@
   background-color: #dbeafe;
 }
 
-
 /* Run controls */
 
 .run-controls {
@@ -55,16 +53,17 @@
 
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .run-controls label {
   color: #374151;
+
   font-size: 14px;
   font-weight: 500;
+
   white-space: nowrap;
 }
-
 
 /* Word input */
 
@@ -79,6 +78,7 @@
   border-radius: 6px;
 
   color: #111827;
+
   font-family: inherit;
   font-size: 14px;
 
@@ -95,10 +95,11 @@
 
 #WordInput:focus {
   outline: none;
+
   border-color: #2563eb;
+
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
-
 
 /* Run button */
 
@@ -110,6 +111,7 @@
   border-radius: 6px;
 
   background-color: #1261d8;
+
   color: #ffffff;
 
   font-family: inherit;
@@ -129,9 +131,36 @@
 
 #runButton:active {
   background-color: #0d4baa;
+
   transform: translateY(1px);
 }
 
+/* Result */
+
+.result-tag {
+  padding: 2px 6px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 4px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.result-tag.accepted {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.result-tag.rejected {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
 
 /* Undo / Redo */
 
@@ -140,6 +169,7 @@
 
   display: flex;
   align-items: center;
+
   gap: 10px;
 }
 
@@ -151,10 +181,12 @@
   place-items: center;
 
   background-color: #ffffff;
+
   border: 1px solid #d7dde5;
   border-radius: 7px;
 
   color: #374151;
+
   font-size: 22px;
 
   cursor: pointer;
@@ -166,6 +198,7 @@
 
 .undo-redo button:not(:disabled):hover {
   background-color: #f8fafc;
+
   border-color: #bfc7d2;
 }
 
@@ -174,8 +207,11 @@
 }
 
 .undo-redo button:disabled {
-  color: #aab2bf;
   background-color: #f8fafc;
+
   border-color: #e5e9f0;
-  cursor: not-allowed;
+
+  color: #aab2bf;
+
+  cursor: default;
 }

@@ -7,6 +7,13 @@ export function useAutomataRun(automata: Automata) {
     const [result, setResult] = useState<RunResult | null>(null);
     const [stepIndex, setStepIndex] = useState<number>(0);
 
+    const status =
+        result === null
+            ? "idle"
+            : automata.accepts(word)
+                ? "accepted"
+                : "rejected";
+
     const backDisabled =
         result === null || stepIndex === 0;
 
@@ -34,5 +41,5 @@ export function useAutomataRun(automata: Automata) {
         setStepIndex((i) => Math.max(i - 1, 0));
     }
 
-    return { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled };
+    return { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status };
 }

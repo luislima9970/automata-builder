@@ -1,7 +1,6 @@
 
 
 interface Props {
-
     onBack: () => void;
     onForward: () => void;
     forwardDisable: boolean;

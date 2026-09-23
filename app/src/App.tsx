@@ -18,7 +18,7 @@ function App() {
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
   const { automata, layout, moveState } = useAutomataLayout();
-  const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled } = useAutomataRun(automata);
+  const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled,status } = useAutomataRun(automata);
 
 
   function handleToolSelect(tool: Tool) {
@@ -78,6 +78,7 @@ function App() {
         onExport={onExport}
         backDisable={backDisabled}
         forwardDisable={forwardDisabled}
+        status={status}
       />
     </main>
   );
