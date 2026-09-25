@@ -212,25 +212,19 @@ export class AutomataLayout {
 
             const from: number = visualTransition.transitions[0].from;
             const to: number = visualTransition.transitions[0].to;
+            const key = this.edgeKey(from, to);
+            const reverseKey = this.edgeKey(to, from);
 
-            if (visited.has(this.edgeKey(to, from))) {
-                if (visualTransition.curvature === 0)
+            if (visited.has(reverseKey)) {
+                const reverseVisualTransition: VisualTransition | undefined = this.visualTransitions.get(reverseKey);
+
+                if (reverseVisualTransition !== undefined && visualTransition.curvature === 0 && reverseVisualTransition.curvature === 0) {
                     visualTransition.curvature = 40;
-                const vt: VisualTransition | undefined = this.visualTransitions.get(this.edgeKey(to, from));
-
-                if (vt === undefined) return;
-
-                if (vt.curvature === 0)
-                    vt.curvature = 40;
-            } else {
-
-                if (visualTransition.curvature === 40){
-                    visualTransition.curvature = 0;
+                    reverseVisualTransition.curvature = 40;
                 }
-
             }
 
-            visited.add(this.edgeKey(from, to));
+            visited.add(key);
 
         }
     }

@@ -53,9 +53,9 @@ describe("DFA", () => {
     const path = dfa.run("ab");
 
     expect(path.transitions).toHaveLength(2);
-    expect(path.transitions[0]).toMatchObject(t1);
-    expect(path.transitions[1]).toMatchObject(t2);
-    expect(path.finalStateId).toBe(0);
+    expect(path.transitions[0]).toEqual([t1]);
+    expect(path.transitions[1]).toEqual([t2]);
+    expect(path.finalStateIds).toEqual([0]);
     expect(path.completed).toBe(true);
   });
 
@@ -105,7 +105,7 @@ describe("DFA", () => {
     const result = dfa.run("b");
 
     expect(result.completed).toBe(true);
-    expect(result.finalStateId).toBe(q2!.getId());
+    expect(result.finalStateIds).toEqual([q2!.getId()]);
   });
 
   it("returns incomplete when input has no valid path", () => {
@@ -120,7 +120,7 @@ describe("DFA", () => {
     const result = dfa.run("b");
 
     expect(result.completed).toBe(false);
-    expect(result.finalStateId).toBeNull();
+    expect(result.finalStateIds).toEqual([]);
   });
 
   it("accepts empty string if start state is accepting", () => {

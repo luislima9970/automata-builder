@@ -7,7 +7,7 @@ export function useAutomataRun(automata: Automata) {
     const [result, setResult] = useState<RunResult | null>(null);
     const [stepIndex, setStepIndex] = useState<number>(0);
 
-    const status =
+    const status: "rejected" | "idle" | "accepted" =
         result === null
             ? "idle"
             : automata.accepts(word)
@@ -27,9 +27,13 @@ export function useAutomataRun(automata: Automata) {
     }
 
     function onRun() {
-        setResult(automata.run(word));
+        const runResult = automata.run(word);
+        console.log("word length:", word.length);
+        console.log("transitions.length:", runResult.transitions.length);
+        console.log("completed:", runResult.completed);
+        console.log("accepted:", runResult.accepted);
+        setResult(runResult);
         setStepIndex(0);
-        console.log(automata.accepts(word));
     }
 
     function onForward() {

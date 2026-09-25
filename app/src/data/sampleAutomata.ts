@@ -3,7 +3,7 @@ import { NFA } from "../../../automata-lib/src/core/NFA.js"
 import { Automata } from "../../../automata-lib/src/core/Automata.js";
 
 export function buildSampleAutomata(): Automata {
-  const nfa : NFA = NFABuilder.buildRegex("a");
+  const nfa : NFA = NFABuilder.buildRegex("aba*");
 
   return nfa;
 }

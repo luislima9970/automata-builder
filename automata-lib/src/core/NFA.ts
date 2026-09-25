@@ -113,61 +113,34 @@ export class NFA extends Automata implements Acceptor {
             return { transitions: [], finalStateIds: [], completed: false, accepted: false };
         }
 
-        const startClosure = this.epsilonClosure([start]);
-        let currentStates = startClosure.map((stateId) => ({
-            stateId,
-            path: [] as Transition[],
-        }));
+        let currentStates = new Set(this.epsilonClosure([start]));
+        const transitionsPerStep: Transition[][] = [];
 
         for (const symbol of input) {
-            const nextStates: Array<{ stateId: number; path: Transition[] }> = [];
+            const transitionsThisStep: Transition[] = [];
+            const nextStatesSet = new Set<number>();
 
-            for (const current of currentStates) {
-                const transitions = this.getTransitionsFor([current.stateId], symbol);
-
-                for (const transition of transitions) {
-                    const closure = this.epsilonClosure([transition.to]);
-
-                    for (const stateId of closure) {
-                        nextStates.push({
-                            stateId,
-                            path: [...current.path, transition],
-                        });
+            for (const stateId of currentStates) {
+                for (const transition of this.getTransitionsFor([stateId], symbol)) {
+                    transitionsThisStep.push(transition);
+                    for (const closureState of this.epsilonClosure([transition.to])) {
+                        nextStatesSet.add(closureState);
                     }
                 }
             }
 
-            if (nextStates.length === 0) {
-                return {
-                    transitions: currentStates.map((s) => s.path),
-                    finalStateIds: [],
-                    completed: false,
-                    accepted: false,
-                };
+            if (nextStatesSet.size === 0) {
+                return { transitions: transitionsPerStep, finalStateIds: [], completed: false, accepted: false };
             }
 
-            const seen = new Set<number>();
-            const dedupedNextStates: Array<{ stateId: number; path: Transition[] }> = [];
-            for (const s of nextStates) {
-                if (!seen.has(s.stateId)) {
-                    seen.add(s.stateId);
-                    dedupedNextStates.push(s);
-                }
-            }
-            currentStates = dedupedNextStates;
+            transitionsPerStep.push(transitionsThisStep);
+            currentStates = nextStatesSet;
         }
 
-        const finalStateIds = currentStates.map((s) => s.stateId);
-        const accepted = finalStateIds.some(
-            (id) => this.getState(id)?.getAcceptance() ?? false
-        );
+        const finalStateIds = [...currentStates];
+        const accepted = finalStateIds.some((id) => this.getState(id)?.getAcceptance() ?? false);
 
-        return {
-            transitions: currentStates.map((s) => s.path),
-            finalStateIds,
-            completed: true,
-            accepted,
-        };
+        return { transitions: transitionsPerStep, finalStateIds, completed: true, accepted };
     }
 
     override accepts(input: string): boolean {
