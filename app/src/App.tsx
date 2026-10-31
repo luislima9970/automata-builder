@@ -8,6 +8,9 @@ import Topbar from './componets/Topbar/TopBar';
 import { useAutomataRun } from './hooks/useAutomataRun';
 import { useAutomataLayout } from './hooks/useAutomataLayout';
 import DownBar from './componets/Downbar/Downbar'
+import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataSerializer";
+
+
 
 function App() {
   const [size, setSize] = useState({
@@ -42,10 +45,20 @@ function App() {
   }, []);
 
 
+
   function onExport(): void {
-    console.log("To implement!");
+    const json = AutomataSerializer.serialize(automata);
+
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "automaton.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
   }
-  
   console.log("step", stepIndex, result?.stateSteps, highlightedStateIds);
 
 
