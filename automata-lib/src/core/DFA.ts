@@ -95,6 +95,7 @@ export class DFA extends Automata implements Acceptor {
         if (this.indexes === null) this.buildIndexes();
 
         const transitions: Transition[][] = [];
+        const stateSteps: number[][] = [[this.startStateId]];
         let currentStateId: number = this.startStateId;
 
         for (const symbol of input) {
@@ -107,11 +108,13 @@ export class DFA extends Automata implements Acceptor {
                     finalStateIds: [],
                     completed: false,
                     accepted: false,
+                    stateSteps,
                 };
             }
 
             transitions.push([transition]);
             currentStateId = transition.to;
+            stateSteps.push([currentStateId]);
         }
 
         const accepted = this.getState(currentStateId)?.getAcceptance() ?? false;
@@ -121,6 +124,7 @@ export class DFA extends Automata implements Acceptor {
             finalStateIds: [currentStateId],
             completed: true,
             accepted,
+            stateSteps, 
         };
     }
 

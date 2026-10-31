@@ -5,5 +5,6 @@ export interface RunResult {
   finalStateIds: number[];
   completed: boolean;
   accepted : boolean;
+  stateSteps: number[][];
 }
 

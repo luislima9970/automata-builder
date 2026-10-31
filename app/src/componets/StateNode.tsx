@@ -6,23 +6,27 @@ interface Props {
     isAccepting: boolean;
     isStart : boolean;
     isSelected : boolean;
+    isHighlighted : boolean;
     onMouseDown: (e: React.MouseEvent) => void;
     onClick: (e: React.MouseEvent) => void;
 }
 
-function StateNode({ position, name, isAccepting,isStart,isSelected, onMouseDown, onClick }: Props) {
+function StateNode({ position, name, isAccepting,isStart,isSelected,isHighlighted, onMouseDown, onClick }: Props) {
 
     let color : string = "black";
+    let fill : string = "white"
 
     if (isStart) color = "green";
-
+    fill = isHighlighted ? "#d3f9d8" : "white";
     if (isSelected) color = "blue";
+
 
 
     return (
         <g onMouseDown={onMouseDown} onClick={onClick}>
 
-            <circle cx={position.x} cy={position.y} r={30} fill = "white" stroke={color} strokeWidth={1} />
+            <circle 
+            cx={position.x} cy={position.y} r={30} fill = {fill} stroke={color} strokeWidth={1} />
             {isAccepting && (
                 <circle cx={position.x} cy={position.y} r={28} fill="none" stroke={color} strokeWidth={1} />
             )}

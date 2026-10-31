@@ -44,6 +44,5 @@ export function useAutomataRun(automata: Automata) {
     function onBack() {
         setStepIndex((i) => Math.max(i - 1, 0));
     }
-
-    return { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status };
+    return { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status, result, stepIndex };
 }

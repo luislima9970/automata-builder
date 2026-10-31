@@ -20,9 +20,10 @@ interface Props {
   automata : Automata;
   layout : AutomataLayout;
   moveState : (stateId : number, dx : number, dy: number) => void;
+  highlightedStateIds : number[];
 }
 
-function Canvas({ width, height, selectedTool,toolSettings,automata,layout,moveState }: Props) {
+function Canvas({ width, height, selectedTool,toolSettings,automata,layout,moveState, highlightedStateIds}: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
@@ -149,7 +150,7 @@ function Canvas({ width, height, selectedTool,toolSettings,automata,layout,moveS
 
   return (
     <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} />
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds}/>
     </svg>
   );
 }

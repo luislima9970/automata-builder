@@ -110,11 +110,12 @@ export class NFA extends Automata implements Acceptor {
     override run(input: string): RunResult {
         const start = this.getStartStateId();
         if (start === null) {
-            return { transitions: [], finalStateIds: [], completed: false, accepted: false };
+            return { transitions: [], finalStateIds: [], completed: false, accepted: false, stateSteps: [] };
         }
 
         let currentStates = new Set(this.epsilonClosure([start]));
         const transitionsPerStep: Transition[][] = [];
+        const stateSteps: number[][] = [[...currentStates]];
 
         for (const symbol of input) {
             const transitionsThisStep: Transition[] = [];
@@ -130,17 +131,24 @@ export class NFA extends Automata implements Acceptor {
             }
 
             if (nextStatesSet.size === 0) {
-                return { transitions: transitionsPerStep, finalStateIds: [], completed: false, accepted: false };
+                return {
+                    transitions: transitionsPerStep,
+                    finalStateIds: [],
+                    completed: false,
+                    accepted: false,
+                    stateSteps,
+                };
             }
 
             transitionsPerStep.push(transitionsThisStep);
             currentStates = nextStatesSet;
+            stateSteps.push([...currentStates]);
         }
 
         const finalStateIds = [...currentStates];
         const accepted = finalStateIds.some((id) => this.getState(id)?.getAcceptance() ?? false);
 
-        return { transitions: transitionsPerStep, finalStateIds, completed: true, accepted };
+        return { transitions: transitionsPerStep, finalStateIds, completed: true, accepted, stateSteps };
     }
 
     override accepts(input: string): boolean {

@@ -3,7 +3,7 @@ import Canvas from './componets/Canvas';
 import Sidebar from './componets/Sidebar';
 import type { Tool } from './data/Tool';
 import './App.css';
-import { defaultToolSettings, ToolSettings } from './data/ToolSettings';
+import { defaultToolSettings, type ToolSettings } from './data/ToolSettings';
 import Topbar from './componets/Topbar/TopBar';
 import { useAutomataRun } from './hooks/useAutomataRun';
 import { useAutomataLayout } from './hooks/useAutomataLayout';
@@ -18,8 +18,10 @@ function App() {
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
   const { automata, layout, moveState } = useAutomataLayout();
-  const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled,status } = useAutomataRun(automata);
+  const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
 
+
+  const highlightedStateIds: number[] = result?.stateSteps?.[stepIndex] ?? []
 
   function handleToolSelect(tool: Tool) {
     setSelectedTool(tool);
@@ -43,6 +45,9 @@ function App() {
   function onExport(): void {
     console.log("To implement!");
   }
+  
+  console.log("step", stepIndex, result?.stateSteps, highlightedStateIds);
+
 
   return (
     <main className="app">
@@ -66,6 +71,7 @@ function App() {
           automata={automata}
           layout={layout}
           moveState={moveState}
+          highlightedStateIds={highlightedStateIds}
         />
       </div>
 
