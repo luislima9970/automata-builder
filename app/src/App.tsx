@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { Automata } from '../../automata-lib/src/core/Automata'
 import Canvas from './componets/Canvas';
 import Sidebar from './componets/Sidebar';
 import type { Tool } from './data/Tool';
@@ -9,11 +8,11 @@ import Topbar from './componets/Topbar/TopBar';
 import { useAutomataRun } from './hooks/useAutomataRun';
 import { useAutomataLayout } from './hooks/useAutomataLayout';
 import DownBar from './componets/Downbar/Downbar'
-import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataSerializer";
 import AppHeader from "./componets/AppHeader/AppHeader"
 import RegexDialog from './componets/RegexDialog'
 import { useAutomataImportExport } from './hooks/useAutomataImportExport';
 import ExampleDialog from './componets/ExampleDialog'
+import { useEditorHistory } from './hooks/useEditorHistory';
 
 function App() {
   const [size, setSize] = useState({
@@ -24,15 +23,25 @@ function App() {
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
   const [regexOpen, setRegexOpen] = useState(false)
-  const { automata, layout, moveState, replaceAutomata } = useAutomataLayout();
+  const { automata, layout, moveState, replaceAutomata, captureSnapshot, restoreSnapshot } = useAutomataLayout();
   const { word, onWordChange, onRun, onForward, onBack, resetRun, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
+
+  const history = useEditorHistory({
+    capture: captureSnapshot,
+    restore: (snapshot) => {
+      restoreSnapshot(snapshot)
+      resetRun()
+    },
+  })
 
   const { importAutomata, exportAutomata, error: fileError, clearError: clearFileError, } = useAutomataImportExport({
     automata,
     onImport: (importedAutomata) => {
+      history.beginEdit();
       replaceAutomata(importedAutomata)
       onWordChange('')
       setSelectedTool('pointer')
+      history.commitEdit();
     },
   })
 
@@ -44,6 +53,8 @@ function App() {
     setSelectedTool(tool);
     console.log(tool);
   }
+
+
 
   useEffect(() => {
     function handleResize() {
@@ -68,20 +79,7 @@ function App() {
       : null
 
 
-  function onExport(): void {
-    const json = AutomataSerializer.serialize(automata);
 
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "automaton.json";
-    a.click();
-
-    URL.revokeObjectURL(url);
-  }
-  console.log("step", stepIndex, result?.stateSteps, highlightedStateIds);
 
 
   return (
@@ -124,6 +122,8 @@ function App() {
           moveState={moveState}
           onAutomataChange={resetRun}
           highlightedStateIds={highlightedStateIds}
+          onEditStart={history.beginEdit}
+          onEditEnd={history.commitEdit}
         />
       </div>
 
@@ -136,21 +136,16 @@ function App() {
         backDisable={backDisabled}
         forwardDisable={forwardDisabled}
         status={status}
-        consumedCharacters={
-          Math.min(
-            stepIndex,
-            result
-              ? result.transitions.length - (result.completed ? 0 : 1)
-              : 0
-          )
-        }
+        consumedCharacters={stepIndex}
         failedCharacterIndex={failedCharacterIndex}
       />
       {regexOpen && (
         <RegexDialog
           onClose={() => setRegexOpen(false)}
           onGenerate={(nextAutomata) => {
+            history.beginEdit();
             replaceAutomata(nextAutomata)
+            history.commitEdit();
             onWordChange('')
           }}
         />
@@ -159,11 +154,13 @@ function App() {
         <ExampleDialog
           onClose={() => setExamplesOpen(false)}
           onSelect={(nextAutomata) => {
+            history.beginEdit();
             replaceAutomata(nextAutomata)
+            history.commitEdit();
             onWordChange('')
             setSelectedTool('pointer')
           }}
-        />  
+        />
       )}
     </main>
   );

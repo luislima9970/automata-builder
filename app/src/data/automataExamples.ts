@@ -1,4 +1,4 @@
-import { DFA } from '../../../automata-lib/src/core/DFA'
+import { NFA } from '../../../automata-lib/src/core/NFA'
 
 interface Example {
   id: string
@@ -6,15 +6,15 @@ interface Example {
   description: string
   accepted: string[]
   rejected: string[]
-  create: () => DFA
+  create: () => NFA
 }
 
-function buildBinaryDFA(
+function buildBinaryNFA(
   stateNames: string[],
   acceptingIndexes: number[],
   transitions: [number, number][],
-): DFA {
-  const automata = new DFA(stateNames[0])
+): NFA {
+  const automata = new NFA(stateNames[0])
   const stateIds = [automata.getStartStateId()]
 
   for (const name of stateNames.slice(1)) {
@@ -57,7 +57,7 @@ export const automataExamples: Example[] = [
     accepted: ['ε', '11', '1010'],
     rejected: ['1', '111', '010'],
     create: () =>
-      buildBinaryDFA(
+      buildBinaryNFA(
         ['Even', 'Odd'],
         [0],
         [
@@ -74,7 +74,7 @@ export const automataExamples: Example[] = [
     accepted: ['01', '1101', '0001'],
     rejected: ['ε', '010', '11'],
     create: () =>
-      buildBinaryDFA(
+      buildBinaryNFA(
         ['Start', 'Seen 0', 'Seen 01'],
         [2],
         [
@@ -88,11 +88,11 @@ export const automataExamples: Example[] = [
     id: 'contains-101',
     name: 'Contains 101',
     description:
-      'Recognizes the sequence 101 anywhere in the input. Once found, it stays accepting.',
+      'Recognizes 101 anywhere in the input. Once found, it stays accepting.',
     accepted: ['101', '11010', '1011'],
     rejected: ['ε', '1001', '111'],
     create: () =>
-      buildBinaryDFA(
+      buildBinaryNFA(
         ['Start', 'Seen 1', 'Seen 10', 'Found 101'],
         [3],
         [

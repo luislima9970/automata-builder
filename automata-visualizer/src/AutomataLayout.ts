@@ -140,6 +140,19 @@ export class AutomataLayout {
         return `${fromId}:${toId}`;
     }
 
+
+    getCurvatures(): {
+        fromId: number;
+        toId: number;
+        curvature: number;
+    }[] {
+        return [...this.visualTransitions.values()].map(edge => ({
+            fromId: edge.transitions[0].from,
+            toId: edge.transitions[0].to,
+            curvature: edge.curvature,
+        }));
+    }
+
     setCurvature(fromId: number, toId: number, curvature: number): boolean {
         const key = this.edgeKey(fromId, toId);
         const visualTransition = this.visualTransitions.get(key);
@@ -185,16 +198,16 @@ export class AutomataLayout {
 
             const label: string = [...new Set(labels)].join(", ");
 
-            ans.push({fromId: fromId,toId: toId, geometry: this.createEdgeGeometry(fromId, toId, label, visualTransition.curvature)});
+            ans.push({ fromId: fromId, toId: toId, geometry: this.createEdgeGeometry(fromId, toId, label, visualTransition.curvature) });
         }
 
 
         return ans;
     }
 
-    getEdgeGeometries() : EdgeGeometry[]{
+    getEdgeGeometries(): EdgeGeometry[] {
 
-        const ans : EdgeGeometry[] = [];
+        const ans: EdgeGeometry[] = [];
 
         this.getEdgeRenders().map((render) => {
             ans.push(render.geometry);

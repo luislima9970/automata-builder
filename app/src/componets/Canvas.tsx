@@ -21,7 +21,9 @@ interface Props {
   layout: AutomataLayout;
   moveState: (stateId: number, dx: number, dy: number) => void;
   highlightedStateIds: number[];
-  onAutomataChange : () => void;
+  onAutomataChange: () => void;
+  onEditStart: () => void;
+  onEditEnd: () => void;
 }
 
 const cursorPaths: Record<Tool, string> = {
@@ -48,15 +50,18 @@ function toolCursor(tool: Tool) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${hotspot}, crosshair`
 }
 
-function Canvas({ width, height, selectedTool, toolSettings, automata, layout, moveState, highlightedStateIds, onAutomataChange }: Props) {
+function Canvas({ width, height, selectedTool, toolSettings, automata, layout, moveState, highlightedStateIds, onAutomataChange, onEditStart, onEditEnd }: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
   const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId, symbol) => {
     const t: Transition = { from: fromId, to: toId, symbol: symbol };
+    onEditStart();
     automata.addTransition(t);
     layout.sync();
+    onEditEnd();
     onAutomataChange();
+
   });
 
   useEffect(() => {
@@ -82,20 +87,23 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
   }
 
   function removeState(stateId: number): void {
+    onEditStart();
     automata.removeState(stateId);
     layout.sync();
+    onEditEnd();
     onAutomataChange();
   }
 
   function toggleAcceptanceState(stateId: number) {
-
+    onEditStart();
     automata.getState(stateId)?.toggleAcceptance();
     layout.sync();
+    onEditEnd();
     onAutomataChange();
   }
 
   function removeEdge(fromId: number, toId: number): void {
-
+    onEditStart();
     automata.getTransitions().map((t) => {
 
       if (t.from === fromId && t.to === toId) {
@@ -106,6 +114,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
 
     layout.sync();
+    onEditEnd();
     onAutomataChange();
 
   }
@@ -143,24 +152,30 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
   }
 
+  
   function createState(e: React.MouseEvent<SVGSVGElement>): boolean {
+    const rect = e.currentTarget.getBoundingClientRect()
 
-    const s: State | null = automata.addState();
+    const position = camera.screenToWorld(
+      e.clientX - rect.left,
+      e.clientY - rect.top,
+    )
 
-    const svg = e.currentTarget;
+    onEditStart()
 
-    const rect = svg.getBoundingClientRect();
+    const state = automata.addState()
 
-    if (s === null) return false;
+    if (state !== null) {
+      layout.sync()
+      layout.setPosition(state.getId(), position)
+    }
 
-    const p: Position = camera.screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
+    onEditEnd()
 
+    if (state === null) return false
 
-    layout.setPosition(s.getId(), p);
-    
-
-    return true;
-
+    onAutomataChange()
+    return true
   }
 
   function handleCanvasClick(e: React.MouseEvent<SVGSVGElement>) {
@@ -191,7 +206,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
   return (
     <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()} style={{ cursor: toolCursor(selectedTool) }}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds} canRename = {selectedTool === 'pointer'} onNodeRename={handleNodeRename}/>
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds} canRename={selectedTool === 'pointer'} onNodeRename={handleNodeRename} />
     </svg>
   );
 }
