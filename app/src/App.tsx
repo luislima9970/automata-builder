@@ -25,7 +25,7 @@ function App() {
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
   const [regexOpen, setRegexOpen] = useState(false)
   const { automata, layout, moveState, replaceAutomata } = useAutomataLayout();
-  const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
+  const { word, onWordChange, onRun, onForward, onBack, resetRun, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
 
   const { importAutomata, exportAutomata, error: fileError, clearError: clearFileError, } = useAutomataImportExport({
     automata,
@@ -122,6 +122,7 @@ function App() {
           automata={automata}
           layout={layout}
           moveState={moveState}
+          onAutomataChange={resetRun}
           highlightedStateIds={highlightedStateIds}
         />
       </div>

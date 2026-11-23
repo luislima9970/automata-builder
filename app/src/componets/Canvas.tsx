@@ -21,6 +21,7 @@ interface Props {
   layout: AutomataLayout;
   moveState: (stateId: number, dx: number, dy: number) => void;
   highlightedStateIds: number[];
+  onAutomataChange : () => void;
 }
 
 const cursorPaths: Record<Tool, string> = {
@@ -47,7 +48,7 @@ function toolCursor(tool: Tool) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${hotspot}, crosshair`
 }
 
-function Canvas({ width, height, selectedTool, toolSettings, automata, layout, moveState, highlightedStateIds }: Props) {
+function Canvas({ width, height, selectedTool, toolSettings, automata, layout, moveState, highlightedStateIds, onAutomataChange }: Props) {
   const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
   const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
@@ -55,6 +56,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
     const t: Transition = { from: fromId, to: toId, symbol: symbol };
     automata.addTransition(t);
     layout.sync();
+    onAutomataChange();
   });
 
   useEffect(() => {
@@ -82,12 +84,14 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
   function removeState(stateId: number): void {
     automata.removeState(stateId);
     layout.sync();
+    onAutomataChange();
   }
 
   function toggleAcceptanceState(stateId: number) {
 
     automata.getState(stateId)?.toggleAcceptance();
     layout.sync();
+    onAutomataChange();
   }
 
   function removeEdge(fromId: number, toId: number): void {
@@ -102,6 +106,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
 
     layout.sync();
+    onAutomataChange();
 
   }
 
@@ -152,6 +157,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
 
     layout.setPosition(s.getId(), p);
+    
 
     return true;
 
