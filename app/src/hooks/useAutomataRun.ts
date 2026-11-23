@@ -28,10 +28,12 @@ export function useAutomataRun(automata: Automata) {
 
     function onRun() {
         const runResult = automata.run(word);
-        console.log("word length:", word.length);
-        console.log("transitions.length:", runResult.transitions.length);
-        console.log("completed:", runResult.completed);
-        console.log("accepted:", runResult.accepted);
+
+        if (!runResult.completed && runResult.stateSteps.length > 0) {
+            runResult.transitions.push([]);
+            runResult.stateSteps.push([]);
+        }
+
         setResult(runResult);
         setStepIndex(0);
     }

@@ -16,9 +16,10 @@ interface Props {
   backDisable: boolean;
   status: "idle" | "accepted" | "rejected";
   consumedCharacters: number;
+  failedCharacterIndex : number | null;
 }
 
-function DownBar({ word, onWordChange, onRun, onBack, onForward, forwardDisable, backDisable, status, consumedCharacters }: Props) {
+function DownBar({ word, onWordChange, onRun, onBack, onForward, forwardDisable, backDisable, status, consumedCharacters, failedCharacterIndex }: Props) {
   return (
     <div className="down-bar">
 
@@ -31,6 +32,7 @@ function DownBar({ word, onWordChange, onRun, onBack, onForward, forwardDisable,
       <InputProgress
         word={word}
         consumedCharacters={consumedCharacters}
+        failedCharacterIndex={failedCharacterIndex}
       />
 
       <ForwardBackwardButtons onBack={onBack} onForward={onForward} forwardDisable={forwardDisable} backDisable={backDisable} />

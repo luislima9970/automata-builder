@@ -36,3 +36,38 @@ svg {
   overflow: hidden;
 }
 
+
+.file-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.file-error button {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.file-error button:hover {
+  background: #fee2e2;
+}
+
+.file-error button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+

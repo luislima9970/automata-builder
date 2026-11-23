@@ -223,6 +223,12 @@
   min-width: 0;
 }
 
+.input-progress-character.failed {
+  border-bottom-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
 @media (max-width: 600px) {
   .down-bar {
     gap: 10px;

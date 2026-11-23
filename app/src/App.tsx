@@ -11,7 +11,7 @@ import DownBar from './componets/Downbar/Downbar'
 import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataSerializer";
 import AppHeader from "./componets/AppHeader/AppHeader"
 import RegexDialog from './componets/RegexDialog'
-
+import { useAutomataImportExport } from './hooks/useAutomataImportExport';
 
 
 function App() {
@@ -26,6 +26,14 @@ function App() {
   const { automata, layout, moveState, replaceAutomata } = useAutomataLayout();
   const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
 
+  const { importAutomata, exportAutomata, error: fileError, clearError: clearFileError, } = useAutomataImportExport({
+    automata,
+    onImport: (importedAutomata) => {
+      replaceAutomata(importedAutomata)
+      onWordChange('')
+      setSelectedTool('pointer')
+    },
+  })
 
   const highlightedStateIds: number[] = result?.stateSteps?.[stepIndex] ?? []
 
@@ -48,6 +56,14 @@ function App() {
   }, []);
 
 
+  const failedCharacterIndex =
+    result &&
+      !result.completed &&
+      result.stateSteps.length > 1 &&
+      stepIndex === result.stateSteps.length - 1
+      ? stepIndex - 1
+      : null
+
 
   function onExport(): void {
     const json = AutomataSerializer.serialize(automata);
@@ -68,11 +84,21 @@ function App() {
   return (
     <main className="app">
       <AppHeader
-        onExport={onExport}
+        onExport={exportAutomata}
         onRegex={() => setRegexOpen(true)}
-        onExamples={() => console.log("To implement!")}
-        onImport={() => console.log("To implement!")}
+        onExamples={() => console.log('To implement!')}
+        onImport={importAutomata}
       />
+      {fileError && (
+        <div className="file-error" role="alert">
+          <span>{fileError}</span>
+
+          <button type="button" onClick={clearFileError}>
+            Dismiss
+          </button>
+        </div>
+      )}
+
       <Topbar
         selectedTool={selectedTool}
         toolSettings={toolSettings}
@@ -106,7 +132,15 @@ function App() {
         backDisable={backDisabled}
         forwardDisable={forwardDisabled}
         status={status}
-        consumedCharacters={stepIndex}
+        consumedCharacters={
+          Math.min(
+            stepIndex,
+            result
+              ? result.transitions.length - (result.completed ? 0 : 1)
+              : 0
+          )
+        }
+        failedCharacterIndex={failedCharacterIndex}
       />
       {regexOpen && (
         <RegexDialog
