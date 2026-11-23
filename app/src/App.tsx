@@ -105,6 +105,7 @@ function App() {
         backDisable={backDisabled}
         forwardDisable={forwardDisabled}
         status={status}
+        consumedCharacters={stepIndex}
       />
     </main>
   );
