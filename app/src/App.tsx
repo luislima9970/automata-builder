@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Automata } from '../../automata-lib/src/core/Automata'
 import Canvas from './componets/Canvas';
 import Sidebar from './componets/Sidebar';
 import type { Tool } from './data/Tool';
@@ -12,7 +13,7 @@ import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataS
 import AppHeader from "./componets/AppHeader/AppHeader"
 import RegexDialog from './componets/RegexDialog'
 import { useAutomataImportExport } from './hooks/useAutomataImportExport';
-
+import ExampleDialog from './componets/ExampleDialog'
 
 function App() {
   const [size, setSize] = useState({
@@ -34,6 +35,8 @@ function App() {
       setSelectedTool('pointer')
     },
   })
+
+  const [examplesOpen, setExamplesOpen] = useState(false)
 
   const highlightedStateIds: number[] = result?.stateSteps?.[stepIndex] ?? []
 
@@ -86,7 +89,7 @@ function App() {
       <AppHeader
         onExport={exportAutomata}
         onRegex={() => setRegexOpen(true)}
-        onExamples={() => console.log('To implement!')}
+        onExamples={() => setExamplesOpen(true)}
         onImport={importAutomata}
       />
       {fileError && (
@@ -150,6 +153,16 @@ function App() {
             onWordChange('')
           }}
         />
+      )}
+      {examplesOpen && (
+        <ExampleDialog
+          onClose={() => setExamplesOpen(false)}
+          onSelect={(nextAutomata) => {
+            replaceAutomata(nextAutomata)
+            onWordChange('')
+            setSelectedTool('pointer')
+          }}
+        />  
       )}
     </main>
   );
