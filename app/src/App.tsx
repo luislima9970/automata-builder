@@ -94,7 +94,6 @@ function App() {
         onRun={onRun}
         onBack={onBack}
         onForward={onForward}
-        onExport={onExport}
         backDisable={backDisabled}
         forwardDisable={forwardDisabled}
         status={status}

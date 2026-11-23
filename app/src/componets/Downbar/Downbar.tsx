@@ -11,16 +11,14 @@ interface Props {
   onRun: () => void;
   onBack: () => void;
   onForward: () => void;
-  onExport: () => void;
   forwardDisable : boolean;
   backDisable : boolean;
   status : "idle" | "accepted" | "rejected";
 }
 
-function DownBar({ word, onWordChange, onRun, onBack, onForward, onExport, forwardDisable,backDisable, status }: Props) {
+function DownBar({ word, onWordChange, onRun, onBack, onForward, forwardDisable,backDisable, status }: Props) {
   return (
     <div className="down-bar">
-      <button className="export-button" onClick={onExport}>Export JSON</button>
 
       <div className="run-controls">
         <WordInput word={word} onChange={onWordChange} />
