@@ -18,7 +18,7 @@ function Topbar({ selectedTool, toolSettings, onToolSettingsChange }: Props) {
         case 'pointer':
             return (
                 <header className="topbar">
-                    <span className="topbar-hint">Drag a state to reposition it</span>
+                    <span className="topbar-hint">Drag a state to reposition it. Double Click to chage the Name</span>
                 </header>
             );
 

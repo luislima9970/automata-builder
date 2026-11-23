@@ -5,49 +5,49 @@ import type { Transition } from "./Transition.js"
 
 export abstract class Automata {
 
-    protected transitions : Transition[];
+    protected transitions: Transition[];
 
-    protected states : State[];
+    protected states: State[];
 
-    protected names : Map <number,string>;
+    protected names: Map<number, string>;
     protected startStateId = 0;
     protected usedNames = new Set<string>();
     private nextStateId = 1;
     private nextTransitionId = 1;
     private nextGeneratedName = 1;
-    
-    constructor(name : string | null = "s"){
+
+    constructor(name: string | null = "s") {
         this.transitions = [];
         this.states = [];
         this.names = new Map();
 
-        const s : string = name ?? "s";
+        const s: string = name ?? "s";
 
-        this.names.set(0,s);
+        this.names.set(0, s);
         this.usedNames.add(s);
-        const initial : State = new State(0);
+        const initial: State = new State(0);
 
         this.states.push(initial);
 
     }
 
-    addState(name? : string) : State | null {
+    addState(name?: string): State | null {
 
-        if (name === undefined){
+        if (name === undefined) {
             do {
                 name = `q${this.nextGeneratedName++}`;
             } while (this.usedNames.has(name));
         }
 
         if (this.usedNames.has(name)) return null;
-    
-        const id : number = this.nextStateId++;
 
-        const s : State = new State(id);
+        const id: number = this.nextStateId++;
+
+        const s: State = new State(id);
 
         this.usedNames.add(name);
 
-        this.names.set(id,name);
+        this.names.set(id, name);
 
         this.states.push(s);
 
@@ -56,7 +56,7 @@ export abstract class Automata {
 
     }
 
-    addTransition(transition : Transition) : Transition | null {
+    addTransition(transition: Transition): Transition | null {
         const fromExists = this.states.some((state) => state.getId() === transition.from);
         const toExists = this.states.some((state) => state.getId() === transition.to);
 
@@ -74,7 +74,7 @@ export abstract class Automata {
         return transition;
     }
 
-    removeTransition(transitionOrId : Transition | number) : boolean {
+    removeTransition(transitionOrId: Transition | number): boolean {
         const transitionIndex = typeof transitionOrId === "number"
             ? this.transitions.findIndex((transition) => transition.id === transitionOrId)
             : this.transitions.indexOf(transitionOrId);
@@ -85,15 +85,15 @@ export abstract class Automata {
         return true;
     }
 
-    getStates() : State[] {
+    getStates(): State[] {
         return [...this.states];
     }
 
-    getState(id : number) : State | null {
+    getState(id: number): State | null {
         return this.states.find((state) => state.getId() === id) ?? null;
     }
 
-    setStateAcceptance(id : number) : boolean {
+    setStateAcceptance(id: number): boolean {
         const state = this.getState(id);
         if (state === null) return false;
 
@@ -101,15 +101,15 @@ export abstract class Automata {
         return true;
     }
 
-    getTransitions() : Transition[] {
+    getTransitions(): Transition[] {
         return [...this.transitions];
     }
 
-    getStateName(id : number) : string | undefined {
+    getStateName(id: number): string | undefined {
         return this.names.get(id);
     }
 
-    removeState(id : number) : boolean {
+    removeState(id: number): boolean {
         if (id === this.startStateId) return false;
 
         const stateIndex = this.states.findIndex((state) => state.getId() === id);
@@ -128,25 +128,40 @@ export abstract class Automata {
         return true;
     }
 
-    setStartState(id : number) : void {
+    renameState(id: number, newName: string): boolean {
+        const name = newName.trim();
+        const previousName = this.names.get(id);
+
+        if (previousName === undefined || name === "") return false;
+        if (name === previousName) return true;
+        if (this.usedNames.has(name)) return false;
+
+        this.usedNames.delete(previousName);
+        this.usedNames.add(name);
+        this.names.set(id, name);
+
+        return true;
+    }
+
+    setStartState(id: number): void {
         const exists = this.states.some((state) => state.getId() === id);
         if (!exists) return;
         this.startStateId = id;
     }
 
-    getStartStateId() : number {
+    getStartStateId(): number {
         return this.startStateId;
     }
 
 
-    private removeAllTransitionsFromState(id : number) : void {
+    private removeAllTransitionsFromState(id: number): void {
         this.transitions = this.transitions.filter(
             (transition) => transition.from !== id && transition.to !== id
         );
     }
 
-    abstract run(input : string) : RunResult;
+    abstract run(input: string): RunResult;
 
-    abstract accepts(input : string) : boolean;
+    abstract accepts(input: string): boolean;
 
 }

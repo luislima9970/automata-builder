@@ -6,14 +6,16 @@ import TransitionEdge from "./TransitionEdge";
 interface Props {
     automata: Automata;
     layout: AutomataLayout;
-    selectedId : number;
+    selectedId: number;
     highlightedStateIds: number[];
+    canRename: boolean
+    onNodeRename: (stateId: number, name: string) => boolean
     onNodeMouseDown: (stateId: number) => void;
     onNodeClick: (stateId: number, e: React.MouseEvent) => void;
     onEdgeClick: (fromStateId: number, toStateId: number, e: React.MouseEvent) => void;
 }
 
-function AutomataView({ automata, layout,selectedId,highlightedStateIds, onNodeMouseDown, onNodeClick, onEdgeClick }: Props) {
+function AutomataView({ automata, layout, selectedId, highlightedStateIds, canRename, onNodeRename, onNodeMouseDown, onNodeClick, onEdgeClick }: Props) {
     const startStateId = automata.getStartStateId();
 
     return (
@@ -26,7 +28,7 @@ function AutomataView({ automata, layout,selectedId,highlightedStateIds, onNodeM
             {layout.getEdgeRenders().map((geom, i) => (
                 <TransitionEdge key={i} geometry={geom.geometry} onClick={(e) => {
                     e.stopPropagation();
-                    onEdgeClick(geom.fromId,geom.toId,e);
+                    onEdgeClick(geom.fromId, geom.toId, e);
 
                 }} />
             ))}
@@ -52,6 +54,8 @@ function AutomataView({ automata, layout,selectedId,highlightedStateIds, onNodeM
                             e.stopPropagation();
                             onNodeClick(state.getId(), e);
                         }}
+                        editable={canRename}
+                        onRename={(name) => onNodeRename(state.getId(),name)}
                     />
                 );
             })}

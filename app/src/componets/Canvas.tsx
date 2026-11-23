@@ -68,6 +68,17 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
     if (!wasDragging) handleCameraMove(e);
   }
 
+
+  function handleNodeRename(stateId: number, name: string): boolean {
+    if (selectedTool !== 'pointer') return false
+
+    const renamed = automata.renameState(stateId, name)
+
+    if (renamed) forceRender()
+
+    return renamed
+  }
+
   function removeState(stateId: number): void {
     automata.removeState(stateId);
     layout.sync();
@@ -173,8 +184,8 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
 
   return (
-    <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()} style={{cursor: toolCursor(selectedTool)}}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds} />
+    <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()} style={{ cursor: toolCursor(selectedTool) }}>
+      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds} canRename = {selectedTool === 'pointer'} onNodeRename={handleNodeRename}/>
     </svg>
   );
 }
