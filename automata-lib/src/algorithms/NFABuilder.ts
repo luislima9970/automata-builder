@@ -4,10 +4,13 @@ import { NFA } from "./../core/NFA.js";
 import { RegexParser } from "./RegexParser.js";
 import type { Transition } from "../core/Transition.js";
 import type { State } from "../core/State.js";
+import { SyntaxTreeSimplifier } from "./SyntaxTreeSimplifier.js";
 export class NFABuilder {
 
     static buildRegex(regex: string): NFA {
-        return NFABuilder.build(RegexParser.parse(regex));
+        const root = RegexParser.parse(regex);
+        const simplifiedRoot = SyntaxTreeSimplifier.simplify(root);
+        return NFABuilder.build(simplifiedRoot);
     }
 
     static build(root: SyntaxNode): NFA {

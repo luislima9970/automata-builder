@@ -1,0 +1,138 @@
+.regex-dialog {
+  box-sizing: border-box;
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #172033;
+  box-shadow: 0 24px 80px #0f172a26;
+  font-family: system-ui, sans-serif;
+}
+
+.regex-dialog::backdrop {
+  background: #0f172a66;
+  backdrop-filter: blur(4px);
+}
+
+.regex-dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.regex-dialog-heading h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.regex-dialog-description {
+  margin: 8px 0 24px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.regex-dialog label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.regex-dialog input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #172033;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.regex-dialog input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.regex-dialog input[aria-invalid='true'] {
+  border-color: #dc2626;
+}
+
+.regex-dialog-help,
+.regex-dialog-notice {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.regex-dialog-help {
+  margin: 10px 0 0;
+}
+
+.regex-dialog-notice {
+  margin: 20px 0;
+}
+
+.regex-dialog-error {
+  margin: 12px 0 0;
+  color: #b91c1c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.regex-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.regex-dialog button {
+  padding: 8px 14px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.regex-dialog button:hover {
+  background: #f1f5f9;
+}
+
+.regex-dialog .regex-dialog-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  font-size: 24px;
+}
+
+.regex-dialog .regex-dialog-submit {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.regex-dialog .regex-dialog-submit:hover {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+}
+
+.regex-dialog button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
