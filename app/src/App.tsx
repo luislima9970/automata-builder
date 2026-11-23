@@ -10,7 +10,7 @@ import { useAutomataLayout } from './hooks/useAutomataLayout';
 import DownBar from './componets/Downbar/Downbar'
 import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataSerializer";
 import AppHeader from "./componets/AppHeader/AppHeader"
-
+import RegexDialog from './componets/RegexDialog'
 
 
 
@@ -22,7 +22,8 @@ function App() {
 
   const [selectedTool, setSelectedTool] = useState<Tool>('pointer');
   const [toolSettings, setToolSettings] = useState<ToolSettings>(defaultToolSettings);
-  const { automata, layout, moveState } = useAutomataLayout();
+  const [regexOpen, setRegexOpen] = useState(false)
+  const { automata, layout, moveState, replaceAutomata } = useAutomataLayout();
   const { word, onWordChange, onRun, onForward, onBack, forwardDisabled, backDisabled, status, result, stepIndex } = useAutomataRun(automata);
 
 
@@ -68,7 +69,7 @@ function App() {
     <main className="app">
       <AppHeader
         onExport={onExport}
-        onRegex={() => console.log("To implement!")}
+        onRegex={() => setRegexOpen(true)}
         onExamples={() => console.log("To implement!")}
         onImport={() => console.log("To implement!")}
       />
@@ -107,6 +108,15 @@ function App() {
         status={status}
         consumedCharacters={stepIndex}
       />
+      {regexOpen && (
+        <RegexDialog
+          onClose={() => setRegexOpen(false)}
+          onGenerate={(nextAutomata) => {
+            replaceAutomata(nextAutomata)
+            onWordChange('')
+          }}
+        />
+      )}
     </main>
   );
 }

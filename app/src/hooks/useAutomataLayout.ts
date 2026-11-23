@@ -16,9 +16,17 @@ export function useAutomataLayout() {
         forceRender();
     }
 
+    function replaceAutomata(nextAutomata: Automata) {
+        const nextLayout = new AutomataLayout(nextAutomata)
+        automataRef.current = nextAutomata
+        layoutRef.current = nextLayout
+        forceRender()
+    }
+
     return {
         automata: automataRef.current,
         layout: layoutRef.current,
         moveState,
+        replaceAutomata
     };
 }
