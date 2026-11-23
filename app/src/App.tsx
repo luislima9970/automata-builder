@@ -9,6 +9,8 @@ import { useAutomataRun } from './hooks/useAutomataRun';
 import { useAutomataLayout } from './hooks/useAutomataLayout';
 import DownBar from './componets/Downbar/Downbar'
 import { AutomataSerializer } from "../../automata-lib/src/serializers/AutomataSerializer";
+import AppHeader from "./componets/AppHeader/AppHeader"
+
 
 
 
@@ -64,6 +66,12 @@ function App() {
 
   return (
     <main className="app">
+      <AppHeader
+        onExport={onExport}
+        onRegex={() => console.log("To implement!")}
+        onExamples={() => console.log("To implement!")}
+        onImport={() => console.log("To implement!")}
+      />
       <Topbar
         selectedTool={selectedTool}
         toolSettings={toolSettings}

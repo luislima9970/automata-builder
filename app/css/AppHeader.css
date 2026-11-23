@@ -1,0 +1,120 @@
+.app-header {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 24px;
+  min-height: 48px;
+  padding: 6px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #172033;
+  font-family: system-ui, sans-serif;
+}
+
+.app-header-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.app-header-logo {
+  display: block;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  color: #2563eb;
+}
+
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.app-header-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid #d7dee8;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #334155;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.app-header-button > svg {
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.app-header-button:hover {
+  border-color: #b8c4d5;
+  background: #f8fafc;
+  color: #172033;
+}
+
+.app-header-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.app-header-primary {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.app-header-primary:hover {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.app-header-file-input {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 16px;
+  }
+
+  .app-header-brand {
+    font-size: 18px;
+  }
+
+  .app-header-actions {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header-button {
+    transition: none;
+  }
+}
+
