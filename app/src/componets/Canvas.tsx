@@ -1,16 +1,15 @@
-import AutomataView from "./AutomataView"
+import AutomataView from "./AutomataView";
+import CanvasControls from "./CanvasControls";
 import { useCamera } from "../hooks/useCamera";
 import { useNodeDrag } from "../hooks/useNodeDrag";
-import type { Tool } from "../data/Tool.js"
-import { State } from "automata-lib/src/core/State.js";
-import { Position } from "../../../automata-visualizer/src/Position.js";
 import { useEdgeDraw } from "../hooks/useEdgeDraw.js";
-import { useEffect, useReducer } from "react";
-import { Transition } from "automata-lib/src/core/Transition.js";
-import { ToolSettings } from "../data/ToolSettings.js";
-import { Automata } from "../../../automata-lib/src/core/Automata.js";
-import { AutomataLayout } from "../../../automata-visualizer/src/AutomataLayout.js";
-
+import { useEffect, useReducer, useRef } from "react";
+import type { MouseEvent } from "react";
+import type { Tool } from "../data/Tool.js";
+import type { Transition } from "automata-lib/src/core/Transition.js";
+import type { ToolSettings } from "../data/ToolSettings.js";
+import type { Automata } from "../../../automata-lib/src/core/Automata.js";
+import type { AutomataLayout } from "../../../automata-visualizer/src/AutomataLayout.js";
 
 interface Props {
   width: number;
@@ -33,7 +32,7 @@ const cursorPaths: Record<Tool, string> = {
   epsilon: '<path d="M17 6c-6-4-13 2-7 6-6 4 1 10 7 6M7 12h8"/>',
   accept: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/>',
   erasor: '<path d="m4 14 9-10a2 2 0 0 1 3 0l5 5a2 2 0 0 1 0 3l-8 9H9l-5-4a2 2 0 0 1 0-3Z"/><path d="m9 9 8 8M13 21h8"/>',
-}
+};
 
 function toolCursor(tool: Tool) {
   const svg = `
@@ -43,47 +42,96 @@ function toolCursor(tool: Tool) {
       stroke-linecap="round" stroke-linejoin="round">
       ${cursorPaths[tool]}
     </svg>
-  `
+  `;
 
-  const hotspot = tool === 'pointer' ? '5 3' : '12 12'
+  const hotspot = tool === "pointer" ? "5 3" : "12 12";
 
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${hotspot}, crosshair`
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${hotspot}, crosshair`;
 }
 
-function Canvas({ width, height, selectedTool, toolSettings, automata, layout, moveState, highlightedStateIds, onAutomataChange, onEditStart, onEditEnd }: Props) {
-  const { camera, handleMouseMove: handleCameraMove, handleWheel } = useCamera(width, height);
-  const { startDrag, handleDragMove, endDrag } = useNodeDrag(camera.zoom, moveState);
-  const [, forceRender] = useReducer((value: number) => value + 1, 0);
-  const { pendingFromId, handleStateClick, cancel } = useEdgeDraw((fromId, toId, symbol) => {
-    const t: Transition = { from: fromId, to: toId, symbol: symbol };
-    onEditStart();
-    automata.addTransition(t);
-    layout.sync();
-    onEditEnd();
-    onAutomataChange();
+function Canvas({
+  width,
+  height,
+  selectedTool,
+  toolSettings,
+  automata,
+  layout,
+  moveState,
+  highlightedStateIds,
+  onAutomataChange,
+  onEditStart,
+  onEditEnd,
+}: Props) {
+  const {
+    camera,
+    handleMouseMove: handleCameraMove,
+    handleWheel,
+    zoomIn,
+    zoomOut,
+    fitToContent,
+  } = useCamera(width, height);
 
-  });
+  const { startDrag, handleDragMove, endDrag } = useNodeDrag(
+    camera.zoom,
+    moveState,
+  );
+
+  const [, forceRender] = useReducer(
+    (value: number) => value + 1,
+    0,
+  );
+
+  const { pendingFromId, handleStateClick, cancel } = useEdgeDraw(
+    (fromId, toId, symbol) => {
+      const transition: Transition = {
+        from: fromId,
+        to: toId,
+        symbol,
+      };
+
+      onEditStart();
+      automata.addTransition(transition);
+      layout.sync();
+      onEditEnd();
+      onAutomataChange();
+    },
+  );
 
   useEffect(() => {
-
     cancel();
     forceRender();
-  }, [selectedTool])
+  }, [selectedTool]);
 
-  function handleMouseMove(e: React.MouseEvent) {
-    const wasDragging = handleDragMove(e);
-    if (!wasDragging) handleCameraMove(e);
+  const initiallyCentered = useRef(false);
+
+  useEffect(() => {
+    if (initiallyCentered.current || width <= 0 || height <= 0) return;
+
+    const points = automata.getStates().flatMap(state => {
+      const position = layout.getPosition(state.getId());
+      return position ? [position] : [];
+    });
+
+    fitToContent(points);
+    initiallyCentered.current = true;
+  }, [automata, layout, width, height, fitToContent]);
+
+  function handleMouseMove(event: MouseEvent) {
+    const wasDragging = handleDragMove(event);
+
+    if (!wasDragging) {
+      handleCameraMove(event);
+    }
   }
 
-
   function handleNodeRename(stateId: number, name: string): boolean {
-    if (selectedTool !== 'pointer') return false
+    if (selectedTool !== "pointer") return false;
 
-    const renamed = automata.renameState(stateId, name)
+    const renamed = automata.renameState(stateId, name);
 
-    if (renamed) forceRender()
+    if (renamed) forceRender();
 
-    return renamed
+    return renamed;
   }
 
   function removeState(stateId: number): void {
@@ -94,7 +142,7 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
     onAutomataChange();
   }
 
-  function toggleAcceptanceState(stateId: number) {
+  function toggleAcceptanceState(stateId: number): void {
     onEditStart();
     automata.getState(stateId)?.toggleAcceptance();
     layout.sync();
@@ -104,111 +152,140 @@ function Canvas({ width, height, selectedTool, toolSettings, automata, layout, m
 
   function removeEdge(fromId: number, toId: number): void {
     onEditStart();
-    automata.getTransitions().map((t) => {
 
-      if (t.from === fromId && t.to === toId) {
-        automata.removeTransition(t);
+    automata.getTransitions().map(transition => {
+      if (transition.from === fromId && transition.to === toId) {
+        automata.removeTransition(transition);
       }
-
     });
-
 
     layout.sync();
     onEditEnd();
     onAutomataChange();
-
   }
 
   function handleEdgeClick(fromId: number, toId: number): void {
-
-    if (selectedTool === 'erasor') {
-
+    if (selectedTool === "erasor") {
       removeEdge(fromId, toId);
       forceRender();
-
     }
-
-
-
   }
 
-  function handleNodeClick(stateId: number, e: React.MouseEvent): void {
-
-    if (selectedTool === 'erasor') {
-
+  function handleNodeClick(
+    stateId: number,
+    _event: MouseEvent,
+  ): void {
+    if (selectedTool === "erasor") {
       removeState(stateId);
-
-    } else if (selectedTool === 'accept') {
-
+    } else if (selectedTool === "accept") {
       toggleAcceptanceState(stateId);
+    } else if (selectedTool === "transition") {
+      handleStateClick(
+        stateId,
+        toolSettings.transitionSymbol === "" ||
+          toolSettings.transitionSymbol === "ε"
+          ? null
+          : toolSettings.transitionSymbol,
+      );
 
-    } else if (selectedTool === 'transition') {
-
-      handleStateClick(stateId, ((toolSettings.transitionSymbol == '' || toolSettings.transitionSymbol == 'ε') ? null : toolSettings.transitionSymbol));
       forceRender();
-    }
-
-    forceRender()
-
-  }
-
-  
-  function createState(e: React.MouseEvent<SVGSVGElement>): boolean {
-    const rect = e.currentTarget.getBoundingClientRect()
-
-    const position = camera.screenToWorld(
-      e.clientX - rect.left,
-      e.clientY - rect.top,
-    )
-
-    onEditStart()
-
-    const state = automata.addState()
-
-    if (state !== null) {
-      layout.sync()
-      layout.setPosition(state.getId(), position)
-    }
-
-    onEditEnd()
-
-    if (state === null) return false
-
-    onAutomataChange()
-    return true
-  }
-
-  function handleCanvasClick(e: React.MouseEvent<SVGSVGElement>) {
-
-    if (selectedTool === 'state') {
-
-      createState(e);
-
-    } else if (selectedTool === 'transition') {
-
-      cancel();
-
     }
 
     forceRender();
+  }
 
+  function createState(event: MouseEvent<SVGSVGElement>): boolean {
+    const rect = event.currentTarget.getBoundingClientRect();
 
+    const position = camera.screenToWorld(
+      event.clientX - rect.left,
+      event.clientY - rect.top,
+    );
+
+    onEditStart();
+
+    const state = automata.addState();
+
+    if (state !== null) {
+      layout.sync();
+      layout.setPosition(state.getId(), position);
+    }
+
+    onEditEnd();
+
+    if (state === null) return false;
+
+    onAutomataChange();
+    return true;
+  }
+
+  function handleCanvasClick(
+    event: MouseEvent<SVGSVGElement>,
+  ): void {
+    if (selectedTool === "state") {
+      createState(event);
+    } else if (selectedTool === "transition") {
+      cancel();
+    }
+
+    forceRender();
+  }
+
+  function handleFit(): void {
+    const points = automata.getStates().flatMap(state => {
+      const position = layout.getPosition(state.getId());
+
+      return position ? [position] : [];
+    });
+
+    fitToContent(points);
   }
 
   function handleNodeMouseDown(stateId: number): void {
-
-    if (selectedTool === 'pointer') {
+    if (selectedTool === "pointer") {
       startDrag(stateId);
     }
-
   }
 
-
   return (
-    <svg width={width} height={height} viewBox={camera.viewBoxString} onMouseMove={handleMouseMove} onWheel={handleWheel} onMouseUp={endDrag} onMouseLeave={endDrag} onClick={handleCanvasClick} onContextMenu={(e) => e.preventDefault()} style={{ cursor: toolCursor(selectedTool) }}>
-      <AutomataView automata={automata} layout={layout} onNodeMouseDown={handleNodeMouseDown} onNodeClick={handleNodeClick} onEdgeClick={handleEdgeClick} selectedId={(pendingFromId === null ? -1 : pendingFromId)} highlightedStateIds={highlightedStateIds} canRename={selectedTool === 'pointer'} onNodeRename={handleNodeRename} />
-    </svg>
+    <div
+      className="canvas-container"
+      style={{ width, height }}
+    >
+      <svg
+        width={width}
+        height={height}
+        viewBox={camera.viewBoxString}
+        onMouseMove={handleMouseMove}
+        onWheel={handleWheel}
+        onMouseUp={endDrag}
+        onMouseLeave={endDrag}
+        onClick={handleCanvasClick}
+        onContextMenu={event => event.preventDefault()}
+        style={{ cursor: toolCursor(selectedTool) }}
+      >
+        <AutomataView
+          automata={automata}
+          layout={layout}
+          onNodeMouseDown={handleNodeMouseDown}
+          onNodeClick={handleNodeClick}
+          onEdgeClick={handleEdgeClick}
+          selectedId={pendingFromId ?? -1}
+          highlightedStateIds={highlightedStateIds}
+          canRename={selectedTool === "pointer"}
+          onNodeRename={handleNodeRename}
+        />
+      </svg>
+
+      <CanvasControls
+        zoom={camera.zoom}
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+        onFit={handleFit}
+      />
+    </div>
   );
 }
 
 export default Canvas;
+

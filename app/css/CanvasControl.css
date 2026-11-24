@@ -1,0 +1,73 @@
+.canvas-container {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.canvas-container > svg {
+  display: block;
+}
+
+.canvas-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  bottom: auto;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px #0f172a12;
+  color: #334155;
+  font-family: system-ui, sans-serif;
+}
+
+.canvas-controls button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.canvas-controls button:hover:not(:disabled) {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.canvas-controls button:disabled {
+  color: #cbd5e1;
+  cursor: default;
+}
+
+.canvas-controls button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.canvas-zoom {
+  min-width: 48px;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.canvas-controls-divider {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: #e2e8f0;
+}
+
