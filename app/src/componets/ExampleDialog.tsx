@@ -51,7 +51,7 @@ export default function ExamplesDialog({ onClose, onSelect }: Props) {
           >
             <div className="example-card-heading">
               <span className="example-name">{example.name}</span>
-              <span className="example-badge">DFA</span>
+              <span className="example-badge">NFA</span>
             </div>
 
             <p className="example-description">{example.description}</p>
